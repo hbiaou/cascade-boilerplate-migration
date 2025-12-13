@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2025-12-13
+
+### Fixed
+
+- **Critical Bug Fix:** Mode-aware prerequisite check in `project-initializer` agent
+  - Prerequisite check now detects mode before validating required files
+  - Mode 1 (Migration) requires: `app_spec.txt`, `migration_report.txt`
+  - Mode 2 (Improvement) requires: `improvement_spec.txt`, `app_spec.txt`
+  - Previously blocked improvement workflow by requiring `migration_report.txt` unconditionally
+  - Mode 2 now explicitly validates `improvement_spec.txt` presence (was missing)
+  - Removed redundant file existence check from Mode 2 block
+  - Users can now successfully run improvement initialization without migration files
+
 ## [0.3.0] - 2025-12-13
 
 ### Added
@@ -71,6 +84,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - AI_WORKFLOW.md documentation outlining the complete migration process
 - Git configuration with appropriate ignore rules
 
+[0.3.1]: https://github.com/hbiaou/cascade-boilerplate-migration/releases/tag/v0.3.1
 [0.3.0]: https://github.com/hbiaou/cascade-boilerplate-migration/releases/tag/v0.3.0
 [0.2.0]: https://github.com/hbiaou/cascade-boilerplate-migration/releases/tag/v0.2.0
 [0.1.0]: https://github.com/hbiaou/cascade-boilerplate-migration/releases/tag/v0.1.0

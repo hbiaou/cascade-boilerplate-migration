@@ -46,26 +46,70 @@ You operate in **two distinct modes** based on what files are present:
 **Also creates:**
 - Git repository (initial commit) - if not already initialized
 
-## PREREQUISITE: Verify Required Files
+## STEP 0: DETECT MODE AND VERIFY PREREQUISITES
 
-Before starting, verify that the required files exist:
+Before starting, detect which mode to operate in and verify the appropriate prerequisites:
 
 ```bash
-# Check for required files
-ls -la app_spec.txt migration_report.txt
+# Detect mode by checking for improvement_spec.txt
+if [ -f improvement_spec.txt ]; then
+  MODE="improvement"
+  echo "MODE DETECTED: Improvement Initialization (Mode 2)"
+  echo "Required files: improvement_spec.txt, app_spec.txt"
+else
+  MODE="migration"
+  echo "MODE DETECTED: Migration Initialization (Mode 1)"
+  echo "Required files: app_spec.txt, migration_report.txt"
+fi
+
+# Validate prerequisites based on detected mode
+if [ "$MODE" = "improvement" ]; then
+  # Check Mode 2 prerequisites
+  # Note: improvement_spec.txt existence already confirmed during mode detection
+  if [ ! -f app_spec.txt ]; then
+    echo "ERROR: app_spec.txt not found"
+    echo "Run the architect agent first to create app_spec.txt"
+    exit 1
+  fi
+
+  echo "✓ All Mode 2 prerequisites satisfied"
+else
+  # Check Mode 1 prerequisites
+  if [ ! -f app_spec.txt ]; then
+    echo "ERROR: app_spec.txt not found"
+    echo "Run the architect agent first to create app_spec.txt"
+    exit 1
+  fi
+
+  if [ ! -f migration_report.txt ]; then
+    echo "ERROR: migration_report.txt not found"
+    echo "Run the ai-studio-migration agent first"
+    exit 1
+  fi
+
+  echo "✓ All Mode 1 prerequisites satisfied"
+fi
 ```
 
-**If `app_spec.txt` does NOT exist:**
-- STOP immediately
-- Inform the user that they need to run the architect agent first to create app_spec.txt
-- Do not proceed with initialization
+**Mode 1 Prerequisites (Migration Initialization):**
 
-**If `migration_report.txt` does NOT exist:**
-- STOP immediately
-- Inform the user that they need to run the ai-studio-migration agent first
-- Do not proceed with initialization
+- `app_spec.txt` - REQUIRED
+- `migration_report.txt` - REQUIRED
 
-## FIRST: Read All Input Files
+**Mode 2 Prerequisites (Improvement Initialization):**
+
+- `improvement_spec.txt` - REQUIRED
+- `app_spec.txt` - REQUIRED
+
+---
+
+**The sections below apply to Mode 1 (Migration Initialization) ONLY.**
+
+**For Mode 2 (Improvement Initialization), skip to the "MODE 2: IMPROVEMENT INITIALIZATION" section further down.**
+
+---
+
+## MODE 1: FIRST STEP - Read All Input Files
 
 Start by reading all input files to understand the migrated app:
 
