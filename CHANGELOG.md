@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2025-12-13
+
+### Added
+
+- **Iterative Improvement Workflow** - Complete workflow for adding new features to migrated apps
+  - `architect` agent Mode 3: Generates `improvement_spec.txt` for new features/improvements
+  - `project-initializer` agent Mode 2: Creates `improvement_list.json` with 5-25 improvement tests
+  - `coder` agent improvement mode: Automatically detects and prioritizes `improvement_list.json`
+  - Automatic merge of completed improvements into `feature_list.json`
+  - Integration testing requirements for backward compatibility
+- `templates/improvement_spec_example.txt` - Reference implementation for improvement specifications
+- Comprehensive documentation in `AI_WORKFLOW.md` for improvement workflow
+- Mode detection and workflow guidance in all affected agents
+
+### Changed
+
+- `architect` agent now operates in three modes: Migration (Mode 1), Database Update (Mode 2), and Improvement (Mode 3)
+- `project-initializer` agent now supports both migration initialization and improvement tracking
+- `coder` agent automatically prioritizes improvements when `improvement_list.json` exists
+- Enhanced "When to Use Which Agent" section with separate Migration and Improvement workflow guidance
+
+### Technical Details
+
+- Total additions: ~710 lines across 4 agent files
+- New template file: `improvement_spec_example.txt` (12KB)
+- Backward compatible: Existing migration workflow unchanged
+- Improvement workflow is completely optional and iterative
+
 ## [0.2.0] - 2025-12-13
 
 ### Added
@@ -43,5 +71,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - AI_WORKFLOW.md documentation outlining the complete migration process
 - Git configuration with appropriate ignore rules
 
+[0.3.0]: https://github.com/hbiaou/cascade-boilerplate-migration/releases/tag/v0.3.0
 [0.2.0]: https://github.com/hbiaou/cascade-boilerplate-migration/releases/tag/v0.2.0
 [0.1.0]: https://github.com/hbiaou/cascade-boilerplate-migration/releases/tag/v0.1.0

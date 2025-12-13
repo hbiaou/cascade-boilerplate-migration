@@ -136,12 +136,99 @@ To use Cascade effectively, you need:
 
 Each agent has specific trigger conditions:
 
+### Migration Workflow Agents
+
 - **`@ai-studio-migration`**: Use first when you have an exported Google AI Studio app to migrate. This creates `migration_report.txt`.
-- **`@architect`**: Use after migration to generate `app_spec.txt` from the migrated app. Use again after database migration to update `app_spec.txt` with database schema.
+- **`@architect`** (Mode 1): Use after migration to generate `app_spec.txt` from the migrated app.
+- **`@architect`** (Mode 2): Use after database migration to update `app_spec.txt` with database schema.
 - **`@db-migration`**: Use only if the migrated app has a database that needs to be migrated to a new system. This creates `db_migration_report.txt` and `db_schema.txt`.
-- **`@project-initializer`**: Use after `app_spec.txt` exists (and optionally after database migration). This creates `feature_list.json` and `init.sh` for the migrated app.
-- **`@coder`**: Use repeatedly during development. Run this agent to verify and fix features one at a time from `feature_list.json`.
+- **`@project-initializer`** (Mode 1): Use after `app_spec.txt` exists (and optionally after database migration). This creates `feature_list.json` and `init.sh` for the migrated app.
+- **`@coder`** (Standard mode): Use repeatedly during development. Run this agent to verify and fix features one at a time from `feature_list.json`.
 - **`@release-engineer`**: Called AUTOMATICALLY by the coder agent after each feature completion. Can also be called manually for milestone releases.
+
+### Improvement Workflow Agents
+
+- **`@architect`** (Mode 3): Use when you want to add new features/improvements to an existing app. This creates `improvement_spec.txt`.
+- **`@project-initializer`** (Mode 2): Use after `improvement_spec.txt` exists. This creates `improvement_list.json` with tests for improvements.
+- **`@coder`** (Improvement mode): Automatically detects and prioritizes `improvement_list.json`. Implements improvements and merges them into `feature_list.json` when complete.
+- **`@release-engineer`**: Still called AUTOMATICALLY after each improvement completion.
+
+---
+
+## Iterative Improvement Workflow (Post-Migration)
+
+After your initial migration is complete and you have a working app with `feature_list.json`, you may want to add new features or make improvements. Use this workflow:
+
+### Workflow Sequence for Improvements
+
+```
+1. @architect (improvement mode) → improvement_spec.txt
+2. @project-initializer (improvement mode) → improvement_list.json
+3. @coder (improvement mode) → implements/verifies improvements
+4. @release-engineer → versioning (automatic)
+```
+
+### When to Use Improvement Workflow
+
+- App already migrated and `feature_list.json` exists
+- User wants to add NEW features not in original migration
+- User wants to make improvements/enhancements to existing features
+- User wants to refactor or optimize existing functionality
+
+### Improvement Workflow Steps
+
+#### Step 1: Define Improvements
+
+```bash
+@architect I want to add [describe new features/improvements]
+```
+
+Example: `@architect I want to add a dark mode toggle and user preferences page`
+
+The architect will:
+- Analyze your request and ask clarifying questions
+- Review existing `app_spec.txt` for context
+- Analyze current codebase to identify integration points
+- Create `improvement_spec.txt` with detailed improvement requirements
+
+#### Step 2: Create Improvement Tests
+
+```bash
+@project-initializer Set up tests for the improvements
+```
+
+The project-initializer will:
+- Read `improvement_spec.txt` and `app_spec.txt`
+- Generate `improvement_list.json` with 5-25 test cases
+- Include integration tests to verify compatibility with existing features
+- Tests focus only on new/changed functionality
+
+#### Step 3: Implement Improvements
+
+```bash
+@coder Work on the improvements
+```
+
+The coder will:
+- **Automatically detect `improvement_list.json` and prioritize it**
+- Implement and verify improvements one by one
+- Test integration with existing features
+- Automatically call release-engineer after each improvement completion
+- When all improvements pass, merge `improvement_list.json` into `feature_list.json`
+
+#### Step 4: Releases (Automatic)
+
+The release-engineer is called automatically after each improvement completion, just like with features.
+
+### Key Differences from Migration Workflow
+
+1. **Smaller Scope:** Improvements typically have 5-25 tests vs. 25-50 for migration
+2. **Integration Focus:** Improvement tests emphasize compatibility with existing features
+3. **Separate Tracking:** `improvement_list.json` exists separately until all improvements complete
+4. **Automatic Merge:** When all improvements pass, they're merged into `feature_list.json`
+5. **Iterative:** You can run this workflow multiple times to continuously add features
+
+---
 
 ## Usage Guide
 
