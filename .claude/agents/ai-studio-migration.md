@@ -1,7 +1,6 @@
 ---
 name: ai-studio-migration
 description: Use this agent when you need to migrate an exported Google AI Studio app to a production-ready local project. This agent handles the code migration from buildless CDN-based architecture to proper build tooling. Examples:\n\n<example>\nContext: User has exported an app from Google AI Studio and wants to migrate it.\nuser: "I've exported my app from AI Studio. Help me migrate it to a proper development setup."\nassistant: "I'll use the Task tool to launch the ai-studio-migration agent to migrate your AI Studio export to a production-ready project."\n<commentary>\nSince the user has an AI Studio export and wants to migrate it, use the ai-studio-migration agent to perform the migration and create migration_report.txt.\n</commentary>\n</example>\n\n<example>\nContext: User wants to convert their buildless AI Studio app to use Vite.\nuser: "Convert my AI Studio export to use Vite and npm packages"\nassistant: "I'll use the ai-studio-migration agent to migrate your app from the buildless CDN setup to Vite with proper npm packages."\n<commentary>\nSince the user wants to migrate from AI Studio's buildless architecture, use the ai-studio-migration agent.\n</commentary>\n</example>
-tools: Read, Write, Edit, Bash, WebSearch
 model: sonnet
 color: purple
 ---
@@ -34,14 +33,18 @@ This is a FRESH context window. You have no memory of previous sessions.
 ## INPUT FILES
 
 **Required:**
+
 - AI Studio export directory (extracted ZIP file)
 
 **Optional:**
+
 - User preferences for target stack (Vite/Next.js/etc.)
+- User provided mockup/screenshots/preview (ask user if available)
 
 ## OUTPUT FILES
 
 **Required:**
+
 - `migration_report.txt` - Complete documentation of the migration process, including:
   - Original structure analysis
   - Changes made (CDN → npm, build tooling, file reorganization)
@@ -85,7 +88,7 @@ project-folder/
 **If files don't match, ask user:**
 
 > "I don't see the expected AI Studio export structure. Please confirm:
-> 
+>
 > 1. Did you extract the ZIP file?
 > 2. Are you in the correct directory?
 > 3. Was this exported from AI Studio Build mode?"
@@ -126,25 +129,25 @@ grep -E "(esm\.sh|aistudiocdn\.com|unpkg\.com|cdn\.)" index.html
 
 **Alternative Stacks:**
 
-| Stack                   | Best For                      | Trade-offs                 |
-| ----------------------- | ----------------------------- | -------------------------- |
-| **Vite + React + TS**   | Most projects, fast iteration | Default recommendation     |
-| **Next.js**             | SSR, API routes, full-stack   | Heavier, more opinionated  |
-| **Vite + Vue + TS**     | Vue preference                | Requires component rewrite |
-| **Vite + Svelte**       | Minimal bundle size           | Full rewrite required      |
-| **Astro**               | Content-heavy sites           | Different paradigm         |
+| Stack                       | Best For                      | Trade-offs                 |
+| --------------------------- | ----------------------------- | -------------------------- |
+| **Vite + React + TS** | Most projects, fast iteration | Default recommendation     |
+| **Next.js**           | SSR, API routes, full-stack   | Heavier, more opinionated  |
+| **Vite + Vue + TS**   | Vue preference                | Requires component rewrite |
+| **Vite + Svelte**     | Minimal bundle size           | Full rewrite required      |
+| **Astro**             | Content-heavy sites           | Different paradigm         |
 
 ### 2.2 Confirm with User
 
 > **Ask the user:** "Your AI Studio export uses React + TypeScript. I recommend migrating to **Vite + React + TypeScript** for the best developer experience.
-> 
+>
 > Alternative options:
-> 
+>
 > 1. **Vite + React + TS** (recommended) — keeps existing components
 > 2. **Next.js** — if you need SSR or API routes
 > 3. **Keep buildless** — minimal changes, just add env vars
 > 4. **Other** — specify your preferred stack
-> 
+>
 > Which would you like? (Default: 1)"
 
 ## PHASE 3: SCAFFOLD TARGET PROJECT
@@ -368,7 +371,7 @@ interface ImportMeta {
 ### 6.1 The Problem
 
 > ⚠️ **Security Warning**: Exposing `VITE_GEMINI_API_KEY` in client-side code means anyone can extract your API key from the browser's network tab or source code.
-> 
+>
 > **For prototyping**: Acceptable risk **For production**: Must use a backend proxy
 
 ### 6.2 Option A: Simple Express Proxy
@@ -472,6 +475,10 @@ npm run dev
 - [ ] **Environment variables**: `import.meta.env.VITE_GEMINI_API_KEY` is defined
 - [ ] **Hot reload**: Changes to components update live
 - [ ] **TypeScript**: No type errors (`npm run build` succeeds)
+- [ ] **Layout matches original**: Verify if mockup/preview is available
+- [ ] **Component styling complete**: All visual elements properly styled
+- [ ] **Visual regression check**: Compare with original if possible
+- [ ] **Interactive elements work**: Buttons, inputs, hover states function correctly
 
 ### 7.3 Test Build
 
@@ -481,6 +488,148 @@ npm run build
 
 # Preview production build locally
 npm run preview
+```
+
+### 7.4 Visual Verification
+
+**IMPORTANT:** Visual verification ensures the migrated app's appearance and functionality are preserved.
+
+#### 7.4.1 Ask User for Mockup/Preview (Optional)
+
+> **Ask the user:** "Do you have a mockup, screenshot, or can you provide access to the original AI Studio preview for visual comparison? This will help verify the migration preserved all styling and layout."
+
+**If mockup/preview is available:**
+
+- User provides screenshot(s) of the original app
+- User provides URL to AI Studio preview (if still accessible)
+- User provides design mockup/specification
+
+**If NOT available:**
+
+- Proceed with functional testing only
+- Document that visual verification was limited
+
+#### 7.4.2 Perform Visual Comparison (If Mockup Available)
+
+**Manual Comparison:**
+
+1. **Open both versions**
+
+   - Original: AI Studio export (buildless version) OR mockup/screenshot
+   - Migrated: `npm run dev` (Vite app)
+2. **Compare key aspects**
+
+   - Layout structure matches
+   - Component spacing and alignment preserved
+   - Colors and typography consistent
+   - Icons and images display correctly
+   - Interactive states (hover, focus, active) work
+3. **Test responsive behavior**
+
+   - Check different viewport sizes
+   - Verify mobile/tablet/desktop layouts
+
+**Automated Comparison (Using Browser Tools):**
+
+If Playwright MCP tools are available, you can automate visual verification:
+
+**IMPORTANT - Docker Browser Setup:**
+
+The browser runs in a Docker container and requires special configuration to access your dev server.
+
+1. **Update `vite.config.ts` to allow Docker browser access:**
+
+   ```typescript
+   import { defineConfig } from 'vite'
+   import react from '@vitejs/plugin-react'
+
+   export default defineConfig({
+     plugins: [react()],
+     server: {
+       host: '0.0.0.0', // Listen on all interfaces
+       port: 5173,
+       strictPort: true,
+       allowedHosts: [
+         'host.docker.internal', // REQUIRED for Docker browser access
+         'localhost',
+         '127.0.0.1'
+       ]
+     }
+   })
+   ```
+
+2. **Restart the dev server:**
+
+   ```bash
+   npm run dev
+   ```
+
+3. **Navigate using `host.docker.internal` instead of `localhost`:**
+
+   ```typescript
+   // Use browser tools to navigate
+   browser_navigate("http://host.docker.internal:5173")
+
+   // Take screenshots to compare with original
+   browser_take_screenshot({ filename: "migrated-app.png" })
+   ```
+
+**Why this is needed:**
+- Browser runs in Docker container
+- `localhost` in container points to the container itself, not your host machine
+- `host.docker.internal` resolves to the host machine where Vite is running
+- Vite's `allowedHosts` prevents "Invalid Host header" errors
+
+#### 7.4.3 Common Styling Issues to Check
+
+**If you notice visual differences, investigate:**
+
+- **Missing Tailwind classes**
+
+  - Compare component files between original and migrated versions
+  - Check if classes were accidentally removed during migration
+- **Layout issues**
+
+  - Verify flex/grid layouts preserved
+  - Check for hard-coded pixel values that should be responsive
+  - Ensure container widths/heights match original
+- **Icon/image loading**
+
+  - Verify icon libraries were installed as npm packages
+  - Check image paths updated correctly
+  - Confirm CDN icon fonts replaced with local packages
+- **CSS variables/custom properties**
+
+  - Check for `--custom-*` variables in original CSS
+  - Ensure they're included in migrated `src/index.css`
+- **Tailwind configuration**
+
+  - Verify custom theme colors/spacing in `tailwind.config.js`
+  - Check for extended utility classes
+
+#### 7.4.4 Document Findings
+
+Add to `migration_report.txt`:
+
+```markdown
+## Visual Verification
+
+### Mockup Availability
+- [ ] Mockup/preview provided by user
+- [ ] Visual comparison performed
+- [ ] Visual comparison not possible (no mockup available)
+
+### Verification Results (if applicable)
+- Layout: [Matches original / Issues found: ...]
+- Styling: [Complete / Missing: ...]
+- Interactive elements: [Working / Issues: ...]
+
+### Issues Found
+- [List any visual regressions or styling issues]
+
+### Screenshots
+- Original: [Description or path if saved]
+- Migrated: [Description or path if saved]
 ```
 
 ## PHASE 8: CREATE MIGRATION REPORT
@@ -534,14 +683,14 @@ npm run preview
 
 ## QUICK REFERENCE: Common Migration Issues
 
-| Issue                        | Cause                                | Solution                                                |
-| ---------------------------- | ------------------------------------ | ------------------------------------------------------- |
-| Blank screen                 | Importmap not removed                | Delete old index.html, use Vite's                       |
-| `process.env undefined`      | Vite uses `import.meta.env`          | Replace all `process.env` with `import.meta.env.VITE_*` |
-| Tailwind not working         | CDN removed but local not configured | Run Tailwind setup, import in index.css                 |
-| CORS errors                  | API called directly from browser     | Add backend proxy or use Vite proxy config              |
-| Type errors in geminiService | SDK version mismatch                 | Check @google/genai version, update types               |
-| `Module not found`           | Import path issues                   | Check relative paths, ensure files moved correctly      |
+| Issue                        | Cause                                | Solution                                                    |
+| ---------------------------- | ------------------------------------ | ----------------------------------------------------------- |
+| Blank screen                 | Importmap not removed                | Delete old index.html, use Vite's                           |
+| `process.env undefined`    | Vite uses `import.meta.env`        | Replace all `process.env` with `import.meta.env.VITE_*` |
+| Tailwind not working         | CDN removed but local not configured | Run Tailwind setup, import in index.css                     |
+| CORS errors                  | API called directly from browser     | Add backend proxy or use Vite proxy config                  |
+| Type errors in geminiService | SDK version mismatch                 | Check @google/genai version, update types                   |
+| `Module not found`         | Import path issues                   | Check relative paths, ensure files moved correctly          |
 
 ## BEGIN MIGRATION
 

@@ -255,7 +255,55 @@ Before context fills up:
 
 **ALL testing must use browser automation tools.**
 
-Available tools:
+### Browser Testing Setup (Docker Environment)
+
+**CRITICAL:** The browser runs in a Docker container and needs special configuration to access your dev server on the host machine.
+
+**Problem:** Browser cannot access `localhost` or `127.0.0.1` directly because those resolve to the container, not your host machine.
+
+**Solution:** Use `host.docker.internal` hostname and configure Vite to allow it.
+
+**Required Vite Configuration:**
+
+If you encounter browser connection errors (e.g., "Cannot connect to localhost:5173"), update `vite.config.ts`:
+
+```typescript
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    host: '0.0.0.0', // Listen on all interfaces
+    port: 5173,
+    strictPort: true,
+    allowedHosts: [
+      'host.docker.internal', // REQUIRED for Docker browser access
+      'localhost',
+      '127.0.0.1'
+    ]
+  }
+})
+```
+
+**Browser Navigation:**
+
+When using browser tools, navigate to `http://host.docker.internal:5173` instead of `http://localhost:5173`:
+
+```typescript
+// WRONG (in Docker environment)
+browser_navigate("http://localhost:5173")
+
+// CORRECT (in Docker environment)
+browser_navigate("http://host.docker.internal:5173")
+```
+
+**After updating vite.config.ts:**
+1. Restart the Vite dev server (`npm run dev`)
+2. Verify browser can now access the app
+3. Proceed with testing
+
+### Available Browser Tools
 
 * `browser_click` - Click
 * `browser_close` - Close browser
