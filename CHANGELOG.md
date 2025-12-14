@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.1] - 2025-12-14
+
+### Changed
+
+- **Documentation Enhancement:** Updated `AI_WORKFLOW.md` to comprehensively document Improvement Mode workflow
+  - Added mode labels to all agent descriptions (Mode 1, Mode 2, Mode 3)
+  - Created new "Agent Modes Summary" section with detailed breakdowns:
+    - Architect agent's three modes (Migration Specification, Database Update, Improvement Specification)
+    - Project Initializer agent's two modes with mode-aware prerequisite checks
+    - Coder agent's automatic mode detection and prioritization logic
+  - Documented mode-aware prerequisites from v0.3.1 bug fix:
+    - Mode 1 (Migration): Requires `app_spec.txt` + `migration_report.txt`
+    - Mode 2 (Improvement): Requires `improvement_spec.txt` + `app_spec.txt` (no migration_report.txt)
+  - Updated repository structure to include `improvement_spec_example.txt` template
+  - Enhanced improvement workflow steps with automatic mode detection details
+  - Corrected test count references (5-25 for improvements, 50-75 for migration)
+  - Improved "When to Use Which Agent" section with detailed prerequisite specifications
+
+### Technical Details
+
+- Documentation updates: 72 additions, 13 deletions to AI_WORKFLOW.md
+- Ensures users understand the complete improvement workflow introduced in v0.3.0
+- Clarifies the critical mode-aware prerequisite checking from v0.3.1
+
 ## [0.4.0] - 2025-12-14
 
 ### Added
@@ -190,6 +214,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - AI_WORKFLOW.md documentation outlining the complete migration process
 - Git configuration with appropriate ignore rules
 
+[0.4.1]: https://github.com/hbiaou/cascade-boilerplate-migration/releases/tag/v0.4.1
 [0.4.0]: https://github.com/hbiaou/cascade-boilerplate-migration/releases/tag/v0.4.0
 [0.3.1]: https://github.com/hbiaou/cascade-boilerplate-migration/releases/tag/v0.3.1
 [0.3.0]: https://github.com/hbiaou/cascade-boilerplate-migration/releases/tag/v0.3.0
