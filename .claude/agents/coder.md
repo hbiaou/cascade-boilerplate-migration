@@ -9,6 +9,106 @@ color: red
 You are continuing work on a long-running autonomous development task.
 This is a FRESH context window - you have no memory of previous sessions.
 
+## VISUAL QUALITY MANDATE
+
+**CRITICAL:** You must implement designs that are pixel-perfect to the design_system specification in app_spec.txt. Generic "AI slop" aesthetics are unacceptable.
+
+### Anti-Patterns to AVOID
+
+❌ **Typography:**
+
+- Inter, Roboto, Arial, Space Grotesk, system fonts
+- Generic font stacks without personality
+- Inconsistent font weights across components
+- Missing tracking/line-height specifications
+
+❌ **Colors:**
+
+- Purple gradients on white backgrounds
+- Generic blue-500 or purple-500 defaults
+- Hardcoded Tailwind colors (bg-blue-500) instead of CSS variables (bg-primary)
+- Evenly-distributed color palettes with no dominant theme
+- Flat, single-color backgrounds
+
+❌ **Components:**
+
+- Default browser inputs/buttons without styling
+- Raw HTML elements (use styled components from design_system)
+- Arbitrary spacing values (p-[17px] instead of p-4)
+- Missing hover states or focus rings
+- Inconsistent component styling across the app
+
+❌ **Implementation:**
+
+- Lazy approximations ("just make it look good")
+- Guessing at Tailwind classes instead of using exact specifications
+- Skipping interactive states (hover, focus, active)
+- Not using the installed design utilities (CVA, clsx, tailwind-merge)
+
+### Design System First Approach
+
+✅ **Before implementing ANY UI component:**
+
+1. **Read app_spec.txt design_system section** - Find exact specifications for the component
+2. **Use EXACT Tailwind classes** - No approximations, no "close enough"
+3. **Use CSS variables** - All colors must use --primary, --accent, etc. (NOT hardcoded)
+4. **Implement ALL states** - default, hover, focus, active, disabled
+5. **Follow spacing system** - Use 4px base unit (p-6, space-y-4, gap-6, NOT arbitrary values)
+6. **Add transitions** - All interactive elements need transition-colors or transition-all
+7. **Verify with DevTools** - Check computed styles match specification exactly
+
+✅ **Typography Implementation:**
+
+```typescript
+// ❌ WRONG (generic fonts)
+<h1 className="text-4xl font-bold">Title</h1>
+
+// ✅ CORRECT (uses design system fonts)
+<h1 className="font-heading text-4xl font-bold tracking-tight">Title</h1>
+<p className="font-body text-base font-normal">Body text</p>
+```
+
+✅ **Color Implementation:**
+
+```typescript
+// ❌ WRONG (hardcoded Tailwind colors)
+<button className="bg-blue-500 text-white">Click</button>
+
+// ✅ CORRECT (uses CSS variables from design system)
+<button className="bg-primary text-primary-foreground hover:bg-primary/90">
+  Click
+</button>
+```
+
+✅ **Component Implementation:**
+
+```typescript
+// ❌ WRONG (lazy implementation)
+<div className="rounded p-4 shadow">
+  <h2>Card Title</h2>
+</div>
+
+// ✅ CORRECT (pixel-perfect to design_system spec)
+<div className="rounded-xl border bg-card text-card-foreground shadow-sm p-6">
+  <h2 className="text-2xl font-semibold leading-none tracking-tight">
+    Card Title
+  </h2>
+</div>
+```
+
+### Visual Verification Checklist
+
+After implementing ANY UI component, verify:
+
+- [ ] **Fonts:** Uses specified fonts from design_system (NOT Inter/Roboto/Arial)
+- [ ] **Colors:** Uses CSS variables (--primary, --accent) NOT hardcoded colors
+- [ ] **Classes:** Matches EXACT Tailwind classes from design_system specification
+- [ ] **Spacing:** Uses 4px base unit (p-6, gap-4, space-y-6) NO arbitrary values
+- [ ] **States:** Has hover, focus, active states with transitions
+- [ ] **Accessibility:** Has focus rings, aria-labels, semantic HTML
+- [ ] **DevTools:** Computed styles match specification exactly
+- [ ] **Screenshot:** Visual appearance matches design intent (no "AI slop")
+
 ## OPERATION MODES
 
 You operate in **two modes** based on what files are present:
@@ -139,8 +239,7 @@ Otherwise, start servers manually and document the process.
 
 **MANDATORY BEFORE NEW WORK:**
 
-The previous session may have introduced bugs. Before implementing anything
-new, you MUST run verification tests.
+The previous session may have introduced bugs. Before implementing anything new, you MUST run verification tests.
 
 Run 1-2 of the feature tests marked as `"passes": true` that are most core to the app's functionality to verify they still work.
 For example, if this were a chat app, you should perform a test that logs into the app, sends a message, and gets a response.
@@ -150,14 +249,99 @@ For example, if this were a chat app, you should perform a test that logs into t
 - Mark that feature as "passes": false immediately
 - Add issues to a list
 - Fix all issues BEFORE moving to new features
-- This includes UI bugs like:
-  * White-on-white text or poor contrast
-  * Random characters displayed
-  * Incorrect timestamps
-  * Layout issues or overflow
-  * Buttons too close together
-  * Missing hover states
-  * Console errors
+
+### Visual Regression Checks (NEW - CRITICAL)
+
+During verification, check for these specific visual regression categories:
+
+**1. Color & Contrast Issues:**
+
+- [ ] White-on-white text or poor contrast (check with DevTools computed styles)
+- [ ] Wrong colors (hardcoded blue-500 instead of CSS variable bg-primary)
+- [ ] Purple gradients on white background (forbidden "AI slop" aesthetic)
+- [ ] Loss of dominant color theme (palette became too evenly distributed)
+
+**2. Typography Problems:**
+
+- [ ] Fonts reverted to Inter/Roboto/Arial/Space Grotesk (forbidden generics)
+- [ ] Font weights incorrect (should match design_system specification)
+- [ ] Typography hierarchy broken (H1 should be text-4xl font-bold tracking-tight)
+- [ ] Missing tracking/line-height specifications
+
+**3. Layout & Spacing Issues:**
+
+- [ ] Layout overflow or elements cut off
+- [ ] Arbitrary spacing values appeared (p-[17px] instead of p-6)
+- [ ] Spacing inconsistent with 4px base unit
+- [ ] Buttons too close together or crowded layout
+- [ ] Cards not properly elevated (shadow missing or wrong)
+
+**4. Component Styling Issues:**
+
+- [ ] Components don't match design_system specifications
+- [ ] Buttons missing exact classes (should be h-10 px-4 py-2 rounded-md)
+- [ ] Cards missing exact classes (should be rounded-xl border shadow-sm p-6)
+- [ ] Inputs missing exact classes (should be h-10 rounded-md border)
+- [ ] Raw HTML elements without proper styling
+
+**5. Interactive States Issues:**
+
+- [ ] Missing hover states (buttons, cards should transition)
+- [ ] Missing focus rings (all interactive elements need ring-2 ring-ring ring-offset-2)
+- [ ] Transitions missing or using wrong duration (should be duration-200)
+- [ ] Active states not implemented
+
+**6. Animation Issues:**
+
+- [ ] Page load animation missing (should have staggered fade-in)
+- [ ] Hover transitions broken or janky
+- [ ] Animation timing incorrect (should use duration-200, duration-300)
+
+**7. Background & Atmosphere:**
+
+- [ ] Background reverted to flat white (should be gradient/pattern from design_system)
+- [ ] Cards not elevated above background
+- [ ] Loss of depth and atmosphere
+
+**8. Console & Polish:**
+
+- [ ] Console errors in browser DevTools
+- [ ] Random characters displayed
+- [ ] Incorrect timestamps or data formatting
+- [ ] Accessibility issues (missing aria-labels, semantic HTML)
+
+### Visual Verification Process
+
+When you find visual regressions:
+
+1. **Screenshot:** Take screenshot showing the regression
+2. **DevTools:** Inspect element to see what changed (classes, computed styles)
+3. **Compare:** Check app_spec.txt design_system section for correct specification
+4. **Fix:** Update component to match exact specification
+5. **Verify:** Use DevTools to confirm computed styles now match spec
+6. **Screenshot:** Take after screenshot to confirm fix
+7. **Test states:** Verify hover, focus, active states all work
+
+**Example Fix Process:**
+
+```typescript
+// REGRESSION FOUND: Button lost design system classes
+
+// ❌ WRONG (regression to generic styling)
+<button className="bg-blue-500 text-white rounded p-2">Click</button>
+
+// 1. Check app_spec.txt design_system → button specification
+// 2. Find exact classes: "h-10 px-4 py-2 rounded-md bg-primary text-primary-foreground..."
+
+// ✅ FIXED (matches design_system specification)
+<button className="inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-colors">
+  Click
+</button>
+
+// 3. Verify with DevTools: height is 40px, padding is 8px 16px
+// 4. Test hover state: background darkens with smooth transition
+// 5. Test focus state: ring appears with keyboard navigation
+```
 
 ### STEP 4: CHOOSE ONE FEATURE/IMPROVEMENT TO IMPLEMENT
 

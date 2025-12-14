@@ -203,6 +203,7 @@ If `db_schema.txt` exists, ensure that the feature list includes tests for:
    - Build process works
    - Environment variables configured
    - Dependencies installed correctly
+   - Design foundation present (CVA, clsx, tailwind-merge, lucide-react installed)
 
 2. **Component Functionality:**
    - Each major component works as expected
@@ -219,17 +220,309 @@ If `db_schema.txt` exists, ensure that the feature list includes tests for:
    - CRUD operations functional
    - Data persistence verified
 
-5. **UI/UX:**
-   - Responsive design
-   - Styling correct
-   - Animations smooth
-   - Accessibility features
+5. **Visual Design Quality (CRITICAL - NEW):**
+   - **Typography Tests:**
+     - Headings use specified fonts (NOT Inter/Roboto/Arial/Space Grotesk)
+     - Body text uses specified fonts
+     - Typography hierarchy matches design_system specification
+     - Font weights and sizes match exact Tailwind classes
+
+   - **Color Palette Tests:**
+     - All colors use CSS variables (--primary, --accent, etc.)
+     - NO purple gradients on white backgrounds
+     - NO generic blue-500 or purple-500 defaults
+     - Dominant color theme visible throughout app
+     - Color palette matches chosen aesthetic (Terracotta/Ocean/Forest/Custom)
+
+   - **Component Specification Tests:**
+     - Buttons: h-10 px-4 py-2 rounded-md with focus rings (exact classes)
+     - Cards: rounded-xl border shadow-sm p-6 (exact classes)
+     - Inputs: h-10 rounded-md border with focus-visible:ring-2 (exact classes)
+     - All components match pixel-perfect specifications from design_system
+
+   - **Responsive Design Tests:**
+     - Mobile (375px-640px): Layout adapts correctly
+     - Tablet (641px-1024px): Layout adapts correctly
+     - Desktop (1025px+): Layout uses full width appropriately
+     - Text remains readable at all breakpoints
+
+   - **Accessibility Tests:**
+     - Text contrast meets WCAG AA (4.5:1 minimum)
+     - Focus rings visible on all interactive elements
+     - All icon buttons have aria-label
+     - Semantic HTML with proper heading hierarchy
+
+   - **Polish Tests:**
+     - NO console errors in browser
+     - Background NOT flat white (uses gradient/pattern as specified)
+     - Cards elevated above background with shadows
+     - All hover states present with transitions
+     - Page load animation (staggered fade-in)
+     - Spacing uses 4px base unit consistently (NO arbitrary values like p-[17px])
+
+6. **UI/UX Quality:**
+   - Responsive design works across devices
+   - Styling matches design specification exactly
+   - Animations smooth (duration-200 for interactions)
+   - Accessibility features implemented
+   - Professional appearance (no "AI slop" aesthetics)
 
 **CRITICAL INSTRUCTION:**
 IT IS CATASTROPHIC TO REMOVE OR EDIT FEATURES IN FUTURE SESSIONS.
 Features can ONLY be marked as passing (change "passes": false to "passes": true).
 Never remove features, never edit descriptions, never modify testing steps.
 This ensures no functionality is missed.
+
+### PIXEL-PERFECT TEST EXAMPLES
+
+**The difference between vague and pixel-perfect tests:**
+
+❌ **BAD TEST (Too Vague - Passes with Any Implementation):**
+
+```json
+{
+  "category": "style",
+  "description": "Verify card has rounded corners",
+  "steps": [
+    "Navigate to page with cards",
+    "Check if cards have rounded corners"
+  ],
+  "passes": false
+}
+```
+
+**Problem:** This test passes with `rounded-sm`, `rounded-md`, `rounded-lg`, `rounded-xl`, or `rounded-3xl`. The coder will do the minimum to pass, resulting in inconsistent design.
+
+---
+
+✅ **GOOD TEST (Pixel-Perfect - Enforces Design System):**
+
+```json
+{
+  "category": "style",
+  "description": "Verify card component matches design specification",
+  "steps": [
+    "Navigate to page with card components",
+    "Take screenshot of card",
+    "Inspect card element with DevTools",
+    "Verify card has these EXACT Tailwind classes: 'rounded-xl border bg-card text-card-foreground shadow-sm'",
+    "Verify card padding is 'p-6' (24px on all sides)",
+    "Verify card border is 1px solid using --border CSS variable",
+    "Verify card shadow is 'shadow-sm' (0 1px 2px 0 rgb(0 0 0 / 0.05))",
+    "Hover over card and verify shadow changes to 'shadow-md' with transition"
+  ],
+  "passes": false
+}
+```
+
+---
+
+✅ **GOOD TEST (Typography Hierarchy - Enforces Design System):**
+
+```json
+{
+  "category": "style",
+  "description": "Verify typography hierarchy matches design specification",
+  "steps": [
+    "Navigate to homepage",
+    "Take screenshot",
+    "Inspect H1 heading with DevTools",
+    "Verify H1 uses font-family from design_system (NOT Inter, Roboto, Arial, Space Grotesk)",
+    "Verify H1 has EXACT classes: 'text-4xl font-bold tracking-tight'",
+    "Verify H1 computed font-size is 36px (2.25rem)",
+    "Inspect H2 heading with DevTools",
+    "Verify H2 has EXACT classes: 'text-3xl font-semibold'",
+    "Verify H2 computed font-size is 30px (1.875rem)",
+    "Inspect body text with DevTools",
+    "Verify body uses font-family from design_system",
+    "Verify body has class: 'text-base font-normal'",
+    "Verify body computed font-size is 16px (1rem)"
+  ],
+  "passes": false
+}
+```
+
+---
+
+✅ **GOOD TEST (Button Specification - Enforces Design System):**
+
+```json
+{
+  "category": "style",
+  "description": "Verify primary button matches design specification",
+  "steps": [
+    "Navigate to page with primary button",
+    "Take screenshot of button in default state",
+    "Inspect button element with DevTools",
+    "Verify button has EXACT classes: 'inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2'",
+    "Verify button has color classes: 'bg-primary text-primary-foreground hover:bg-primary/90'",
+    "Verify button has focus ring classes: 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'",
+    "Verify button computed height is 40px (h-10)",
+    "Verify button computed padding is 8px 16px (px-4 py-2)",
+    "Hover over button and take screenshot",
+    "Verify background color changes with transition-colors",
+    "Tab to button with keyboard and verify focus ring appears",
+    "Verify focus ring is 2px solid using --ring CSS variable with 2px offset"
+  ],
+  "passes": false
+}
+```
+
+---
+
+✅ **GOOD TEST (Color Palette - Enforces Anti-Slop):**
+
+```json
+{
+  "category": "style",
+  "description": "Verify color palette matches chosen theme (NO generic purple/blue defaults)",
+  "steps": [
+    "Navigate to homepage",
+    "Take screenshot",
+    "Open DevTools and inspect :root CSS variables",
+    "Verify --primary is NOT 'blue-500' (220 90% 50%) or 'purple-500' (270 90% 50%)",
+    "Verify --primary matches chosen theme from design_system (e.g., Terracotta: '15 75% 55%')",
+    "Verify --accent matches chosen theme",
+    "Inspect multiple elements (buttons, cards, badges) with DevTools",
+    "Verify they use CSS variables (bg-primary, text-accent) NOT hardcoded Tailwind colors (bg-blue-500)",
+    "Verify dominant color theme is visible throughout page (cohesive palette)",
+    "Verify NO purple gradients on white background"
+  ],
+  "passes": false
+}
+```
+
+---
+
+✅ **GOOD TEST (Background Atmosphere - Enforces Anti-Slop):**
+
+```json
+{
+  "category": "style",
+  "description": "Verify background is NOT flat white and has atmospheric depth",
+  "steps": [
+    "Navigate to homepage",
+    "Take screenshot",
+    "Inspect body element with DevTools",
+    "Verify background is NOT solid white (#ffffff or rgb(255, 255, 255))",
+    "Verify background uses gradient, pattern, or layered approach from design_system",
+    "Example check: Verify classes like 'bg-gradient-to-br from-background via-background to-accent/5'",
+    "Verify cards are elevated above background with shadows (shadow-sm minimum)",
+    "Verify there is visible depth between background and foreground elements"
+  ],
+  "passes": false
+}
+```
+
+---
+
+✅ **GOOD TEST (Spacing Consistency - Enforces 4px Grid):**
+
+```json
+{
+  "category": "style",
+  "description": "Verify spacing uses 4px base unit consistently (NO arbitrary values)",
+  "steps": [
+    "Navigate to homepage",
+    "Take screenshot",
+    "Inspect multiple components with DevTools",
+    "Verify component padding uses Tailwind scale (p-6 = 24px, p-4 = 16px, NOT p-[17px])",
+    "Verify stack spacing uses Tailwind scale (space-y-4 = 16px, space-y-6 = 24px)",
+    "Verify grid gaps use Tailwind scale (gap-6 = 24px, gap-4 = 16px)",
+    "Verify margins use Tailwind scale (my-12 = 48px, mb-8 = 32px)",
+    "Ensure NO arbitrary values found (e.g., p-[17px], m-[23px], gap-[13px])",
+    "All spacing values should be multiples of 4px"
+  ],
+  "passes": false
+}
+```
+
+---
+
+**Key Principles for Pixel-Perfect Tests:**
+
+1. **Specify EXACT Tailwind classes** - not just "has padding" but "has p-6 (24px)"
+2. **Verify computed values** - use DevTools to check actual pixel values match specification
+3. **Test interactive states** - hover, focus, active (not just default state)
+4. **Check CSS variables** - ensure --primary, --accent, etc. are used (not hardcoded colors)
+5. **Forbid anti-patterns** - explicitly check for absence of Inter/Roboto, purple gradients, flat white
+6. **Include visual verification** - take screenshots at each key step
+7. **Measure, don't assume** - use DevTools to verify font sizes, spacing, colors exactly
+
+---
+
+### TEST QUANTITY GUIDELINES
+
+**Total Tests: 50-75** (increased from 25-50 to include visual design tests)
+
+**Breakdown:**
+
+1. **Functional Tests: 30-45**
+   - Migration verification (5 tests)
+   - Component functionality (10-15 tests)
+   - API integration (5-10 tests)
+   - Database operations if applicable (5-10 tests)
+   - User workflows (5-10 tests)
+
+2. **Visual Design Tests: 20-30** (NEW - CRITICAL)
+   - **Typography tests (5 tests):**
+     - Heading font verification (NOT Inter/Roboto/Arial/Space Grotesk)
+     - Body font verification
+     - Typography hierarchy (H1, H2, H3, body exact classes)
+     - Font weights and sizes match specification
+     - Monospace font if applicable
+
+   - **Color palette tests (5 tests):**
+     - CSS variables usage (--primary, --accent, etc.)
+     - NO purple gradients or blue-500 defaults
+     - Dominant color theme visible
+     - Color palette matches chosen aesthetic
+     - Dark mode colors if applicable
+
+   - **Component specification tests (5 tests):**
+     - Button pixel-perfect specification
+     - Card pixel-perfect specification
+     - Input pixel-perfect specification
+     - Badge/Alert specification
+     - Other key component specifications
+
+   - **Responsive design tests (3 tests):**
+     - Mobile layout (375px-640px)
+     - Tablet layout (641px-1024px)
+     - Desktop layout (1025px+)
+
+   - **Animation/Interaction tests (2 tests):**
+     - Page load staggered fade-in animation
+     - Hover state transitions (buttons, cards)
+
+**Quality over Quantity:**
+
+- Each test should have 5-15 detailed steps
+- At least 10 tests MUST have 10+ steps (comprehensive tests)
+- Focus on pixel-perfect verification, not existence checks
+- Every visual design test should include DevTools inspection
+- Every visual design test should include screenshot verification
+
+**Test Distribution Example for a Chat App:**
+
+```
+Functional Tests (35):
+- 5 migration verification tests
+- 10 chat functionality tests (send, receive, history, etc.)
+- 8 user authentication tests
+- 7 API integration tests (Gemini API)
+- 5 database tests (message persistence)
+
+Visual Design Tests (25):
+- 5 typography tests (heading font, body font, hierarchy, weights, sizes)
+- 5 color palette tests (CSS vars, theme matching, anti-slop checks)
+- 6 component spec tests (buttons, cards, inputs, message bubbles, avatars, badges)
+- 3 responsive tests (mobile, tablet, desktop)
+- 2 animation tests (page load, message send animation)
+- 4 polish tests (background depth, spacing consistency, hover states, accessibility)
+
+TOTAL: 60 tests
+```
 
 ## SECOND TASK: Create init.sh
 

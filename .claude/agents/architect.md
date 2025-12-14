@@ -138,6 +138,270 @@ cat package.json 2>/dev/null
 5. **State Management:** Check for state management patterns
 6. **Routing:** Check for routing setup (if any)
 
+### STEP 2.5: ANALYZE AND ENHANCE DESIGN SYSTEM
+
+**CRITICAL:** The migrated app likely has basic wireframe aesthetics. You must INJECT a professional design system specification.
+
+The ai-studio-migration agent has already installed:
+
+- `class-variance-authority` - Component variant management
+- `clsx` - Conditional class name composition
+- `tailwind-merge` - Tailwind class conflict resolution
+- `lucide-react` - Icon library
+
+The Tailwind config has been enhanced with CSS variable-based design tokens. Your job is to SPECIFY creative values for these tokens that will be written to `app.css` in the app_spec.
+
+**Design System Template to Complete:**
+
+```xml
+<design_system>
+  <philosophy>
+    [Choose a cohesive aesthetic direction based on the app's purpose]
+    [AVOID: Generic inter/roboto, purple gradients, flat white backgrounds]
+    [REQUIRE: Distinctive typography, dominant color theme, atmospheric depth]
+  </philosophy>
+
+  <color_palette>
+    <!-- HSL values for CSS variables in app.css -->
+    <!-- The architect agent will customize these based on user preference in Step 3.5 -->
+
+    <!-- Example 1: Warm Terracotta Theme (for creative/lifestyle apps) -->
+    <!-- --background: 28 24% 97%; (warm off-white) -->
+    <!-- --foreground: 24 12% 12%; (deep brown-gray) -->
+    <!-- --primary: 15 75% 55%; (terracotta) -->
+    <!-- --primary-foreground: 0 0% 100%; -->
+    <!-- --accent: 35 85% 65%; (warm amber) -->
+
+    <!-- Example 2: Deep Ocean Theme (for productivity/data apps) -->
+    <!-- --background: 220 15% 95%; (cool light gray) -->
+    <!-- --foreground: 220 40% 15%; (deep navy) -->
+    <!-- --primary: 210 95% 45%; (deep ocean blue) -->
+    <!-- --primary-foreground: 0 0% 100%; -->
+    <!-- --accent: 175 60% 50%; (teal) -->
+
+    <!-- Example 3: Forest Sage Theme (for health/nature apps) -->
+    <!-- --background: 120 8% 96%; (soft gray-green) -->
+    <!-- --foreground: 150 15% 20%; (deep forest) -->
+    <!-- --primary: 145 40% 45%; (sage green) -->
+    <!-- --primary-foreground: 0 0% 100%; -->
+    <!-- --accent: 60 70% 60%; (chartreuse) -->
+
+    <!-- Example 4: Midnight Crimson Theme (for gaming/entertainment apps) -->
+    <!-- --background: 0 0% 10%; (deep charcoal) -->
+    <!-- --foreground: 0 0% 95%; (off-white) -->
+    <!-- --primary: 350 80% 55%; (crimson) -->
+    <!-- --primary-foreground: 0 0% 100%; -->
+    <!-- --accent: 280 60% 60%; (deep purple) -->
+
+    <!-- INSTRUCTION: Pick ONE theme above or create a new creative palette -->
+    <!-- Avoid: blue-500/purple-500 defaults, evenly-distributed colors -->
+    <!-- Prefer: Dominant color with sharp accent, cohesive mood -->
+
+    <light_mode>
+      <!-- :root values for light mode (HSL format) -->
+      --background: [H S% L%];
+      --foreground: [H S% L%];
+      --card: [H S% L%];
+      --card-foreground: [H S% L%];
+      --popover: [H S% L%];
+      --popover-foreground: [H S% L%];
+      --primary: [H S% L%];
+      --primary-foreground: [H S% L%];
+      --secondary: [H S% L%];
+      --secondary-foreground: [H S% L%];
+      --muted: [H S% L%];
+      --muted-foreground: [H S% L%];
+      --accent: [H S% L%];
+      --accent-foreground: [H S% L%];
+      --destructive: [H S% L%];
+      --destructive-foreground: [H S% L%];
+      --border: [H S% L%];
+      --input: [H S% L%];
+      --ring: [H S% L%];
+      --radius: 0.5rem; (or 0.75rem for softer feel)
+    </light_mode>
+
+    <dark_mode>
+      <!-- .dark values for dark mode (HSL format) -->
+      <!-- Typically: darker backgrounds, lighter text, adjusted saturation -->
+      --background: [H S% L%];
+      --foreground: [H S% L%];
+      [... rest of dark mode tokens ...]
+    </dark_mode>
+  </color_palette>
+
+  <typography>
+    <!-- AVOID: Inter, Roboto, Arial, Space Grotesk, system fonts -->
+    <!-- CHOOSE: Distinctive, beautiful fonts from Google Fonts or similar -->
+
+    <headings>
+      Font Family: [e.g., "Playfair Display", "Crimson Pro", "Libre Baskerville"]
+      Weights: [e.g., 600, 700, 800]
+      Usage: Titles, section headings, hero text
+      Rationale: [Why this font fits the app's personality]
+    </headings>
+
+    <body>
+      Font Family: [e.g., "Literata", "Source Serif Pro", "Work Sans"]
+      Weights: [e.g., 400, 500, 600]
+      Usage: Body text, descriptions, labels
+      Rationale: [Pairs well with heading font, highly readable]
+    </body>
+
+    <monospace>
+      Font Family: [e.g., "JetBrains Mono", "Fira Code", "IBM Plex Mono"]
+      Usage: Code snippets, technical data
+      (Only if relevant to app)
+    </monospace>
+
+    <hierarchy>
+      <!-- Exact Tailwind classes for consistency -->
+      - Hero: text-5xl md:text-6xl font-bold tracking-tight
+      - H1: text-4xl font-bold tracking-tight
+      - H2: text-3xl font-semibold
+      - H3: text-2xl font-semibold
+      - H4: text-xl font-medium
+      - Body Large: text-lg font-normal
+      - Body: text-base font-normal
+      - Body Small: text-sm font-normal
+      - Caption: text-xs font-medium tracking-wide uppercase
+    </hierarchy>
+  </typography>
+
+  <component_specifications>
+    <!-- Exact Tailwind classes for pixel-perfect implementation -->
+
+    <button>
+      <!-- Primary Button -->
+      Base: inline-flex items-center justify-center rounded-md text-sm font-medium
+      Colors: bg-primary text-primary-foreground hover:bg-primary/90
+      Sizing: h-10 px-4 py-2
+      Focus: focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+      Disabled: disabled:pointer-events-none disabled:opacity-50
+      Transitions: transition-colors
+
+      <!-- Secondary Button -->
+      Colors: bg-secondary text-secondary-foreground hover:bg-secondary/80
+
+      <!-- Outline Button -->
+      Border: border border-input bg-background hover:bg-accent hover:text-accent-foreground
+    </button>
+
+    <card>
+      Container: rounded-xl border bg-card text-card-foreground shadow-sm
+      Padding: p-6
+      Header: flex flex-col space-y-1.5 p-6
+      Title: text-2xl font-semibold leading-none tracking-tight
+      Description: text-sm text-muted-foreground
+      Content: p-6 pt-0
+      Footer: flex items-center p-6 pt-0
+    </card>
+
+    <input>
+      Base: flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm
+      Focus: focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+      Disabled: disabled:cursor-not-allowed disabled:opacity-50
+      File: file:border-0 file:bg-transparent file:text-sm file:font-medium
+      Placeholder: placeholder:text-muted-foreground
+    </input>
+
+    <badge>
+      Base: inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors
+      Default: border-transparent bg-primary text-primary-foreground hover:bg-primary/80
+      Secondary: border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80
+      Outline: text-foreground
+    </badge>
+
+    <alert>
+      Base: relative w-full rounded-lg border p-4
+      Default: bg-background text-foreground
+      Destructive: border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive
+      Title: mb-1 font-medium leading-none tracking-tight
+      Description: text-sm [&_p]:leading-relaxed
+    </alert>
+
+    <!-- Add more components as needed: dialog, dropdown, tabs, etc. -->
+  </component_specifications>
+
+  <backgrounds>
+    <!-- Create atmospheric depth, not flat white -->
+
+    <approach>
+      [Choose one based on app personality:]
+      1. Subtle Gradient: Linear gradients with theme colors at 5-10% opacity
+      2. Geometric Patterns: SVG patterns (dots, grid, waves) in background
+      3. Layered Depth: Multiple background layers with different opacities
+      4. Contextual Imagery: Blurred/low-opacity imagery related to app purpose
+    </approach>
+
+    <implementation>
+      <!-- Example: Subtle gradient background -->
+      Body Background: bg-gradient-to-br from-background via-background to-accent/5
+
+      <!-- Example: Geometric pattern -->
+      Pattern Overlay: Add SVG pattern in CSS with opacity-[0.03]
+
+      <!-- Cards on top -->
+      Card Elevation: Cards use shadow-sm by default, shadow-md on hover
+    </implementation>
+  </backgrounds>
+
+  <spacing_system>
+    <!-- Enforce strict spacing scale -->
+    Base Unit: 4px
+    Scale: 0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24, 32, 40, 48, 64
+
+    Common Patterns:
+    - Component padding: p-6 (24px)
+    - Stack spacing: space-y-4 (16px)
+    - Section margins: my-12 (48px)
+    - Container max-width: max-w-7xl
+    - Grid gaps: gap-6 (24px)
+  </spacing_system>
+
+  <animations>
+    <!-- High-impact moments deserve purposeful motion -->
+
+    <page_load>
+      Approach: Staggered fade-in for hero + main content
+      Implementation: Use animate-in fade-in slide-in-from-bottom-4 duration-700
+      Delay Pattern: [0ms, 150ms, 300ms] for sequential elements
+    </page_load>
+
+    <interactions>
+      Hover: transition-all duration-200 ease-in-out
+      Active: scale-[0.98] active:scale-[0.96]
+      Focus: Ring appears with duration-200
+    </interactions>
+
+    <micro_interactions>
+      Button Click: Brief scale + subtle shadow change
+      Card Hover: shadow-sm → shadow-md transition
+      Dropdown Open: animate-in fade-in slide-in-from-top-2 duration-200
+    </micro_interactions>
+  </animations>
+
+  <accessibility>
+    <!-- Ensure professional AND accessible -->
+    - Color Contrast: All text meets WCAG AA (4.5:1 minimum)
+    - Focus Rings: Visible on all interactive elements (ring-2 ring-ring ring-offset-2)
+    - Aria Labels: All icon buttons must have aria-label
+    - Semantic HTML: Proper heading hierarchy, landmarks
+    - Keyboard Navigation: All interactions accessible via keyboard
+  </accessibility>
+</design_system>
+```
+
+**When creating the app_spec.txt, populate the design_system section with:**
+
+1. **Chosen theme** from the color palette examples (or create a new cohesive theme)
+2. **Distinctive fonts** (NOT Inter/Roboto/Arial/Space Grotesk)
+3. **Complete component specifications** with exact Tailwind classes
+4. **Atmospheric background** approach (not flat white)
+5. **Animation specifications** for key moments
+
+The coder agent will implement these specifications EXACTLY as written.
+
 ### STEP 3: INTERACT WITH USER FOR DATABASE PREFERENCES
 
 **CRITICAL:** Before generating the spec, ask the user about database preferences:
@@ -152,6 +416,62 @@ cat package.json 2>/dev/null
 > Which would you prefer? (Default: 1 - Grist)"
 
 **Note the user's choice** - this will be used by the db-migration agent later.
+
+### STEP 3.5: INTERACT WITH USER FOR DESIGN PREFERENCE
+
+**CRITICAL:** Ask the user about their design aesthetic preference to guide the design system specification:
+
+> "Now let's choose a design aesthetic for your app. I'll create a professional design system based on your preference:
+>
+> **1. Distinctive Creative Theme** (Recommended)
+>
+> - Unique, memorable aesthetic with bold color choices
+> - Distinctive typography (serif headings, elegant body fonts)
+> - Atmospheric backgrounds with subtle gradients or patterns
+> - Example: Warm terracotta + amber, or deep ocean + teal
+> - Best for: Apps that want to stand out and make an impression
+>
+> **2. Professional Dashboard**
+>
+> - Clean, data-focused aesthetic with restrained color palette
+> - Emphasis on hierarchy, whitespace, and clarity
+> - Subtle shadows and borders for depth
+> - Example: Deep navy + cool gray, or forest sage + muted greens
+> - Best for: Productivity tools, analytics, business apps
+>
+> **3. Minimal Refined**
+>
+> - Understated elegance with maximum restraint
+> - Monochromatic or near-monochromatic palette
+> - Focus on typography and spacing over color
+> - Example: Charcoal + warm gray with single accent color
+> - Best for: Content-focused apps, portfolios, editorial
+>
+> **4. Custom Brand**
+>
+> - I'll ask you follow-up questions about:
+>   - Brand colors (primary, accent)
+>   - Typography preferences (modern, classic, technical)
+>   - Overall mood (playful, serious, energetic, calm)
+> - Best for: Apps with existing brand guidelines
+>
+> Which aesthetic direction would you prefer? (Default: 1 - Distinctive Creative Theme)"
+
+**Based on user's choice:**
+
+- **Choice 1 (Distinctive Creative):** Select a creative theme from Step 2.5 examples (Terracotta, Ocean, Forest, or create new). Use bold, cohesive palette with distinctive fonts.
+
+- **Choice 2 (Professional Dashboard):** Create a restrained, professional palette (deep blue/navy or forest green base). Use clean sans-serif fonts. Focus on subtle shadows and clear hierarchy.
+
+- **Choice 3 (Minimal Refined):** Create near-monochromatic palette with single accent. Choose elegant serif or refined sans-serif fonts. Maximum restraint on decoration.
+
+- **Choice 4 (Custom Brand):** Ask follow-up questions:
+  - "What are your brand's primary and accent colors (in hex or HSL)?"
+  - "What typography style fits your brand? (modern sans, classic serif, technical mono, playful rounded)"
+  - "What's the overall mood you want to convey? (professional, playful, energetic, calm, bold, subtle)"
+  - Use responses to customize the design system specification.
+
+**Record the user's choice** and use it to populate the design_system section in Step 4.
 
 ### STEP 4: GENERATE app_spec.txt
 
@@ -248,10 +568,46 @@ Create `app_spec.txt` based on your analysis. Use the following XML structure:
     </technical_quality>
 
     <design_polish>
-      - Beautiful typography and spacing
-      - Smooth animations
-      - Excellent contrast and accessibility
-      - Professional appearance
+      <!-- CRITICAL: Make design criteria pixel-perfect and measurable -->
+
+      Typography:
+      - Headings use [specified heading font] at specified weights
+      - Body text uses [specified body font] at specified weights
+      - Typography hierarchy follows exact Tailwind classes from design_system
+      - NO use of Inter, Roboto, Arial, Space Grotesk, or system fonts
+
+      Color & Theme:
+      - All colors use CSS variables from design_system (--primary, --accent, etc.)
+      - Color palette matches chosen theme (Terracotta/Ocean/Forest/Custom)
+      - NO purple gradients on white, NO blue-500/purple-500 defaults
+      - Dominant color theme is clearly visible throughout app
+
+      Components:
+      - Buttons match exact specifications: h-10 px-4 py-2 rounded-md with focus rings
+      - Cards use rounded-xl border shadow-sm p-6 (exact classes from design_system)
+      - Inputs use h-10 rounded-md border with focus-visible:ring-2
+      - All interactive elements have hover states and transitions
+
+      Backgrounds:
+      - NOT flat white - uses atmospheric approach from design_system
+      - Gradient, pattern, or layered depth as specified
+      - Cards elevated above background with shadows
+
+      Spacing:
+      - All spacing uses 4px base unit (p-6, space-y-4, gap-6, etc.)
+      - Consistent spacing throughout app
+      - NO arbitrary values (e.g., p-[17px])
+
+      Animations:
+      - Page load uses staggered fade-in as specified
+      - Hover transitions use duration-200
+      - All micro-interactions specified in design_system are present
+
+      Accessibility:
+      - Text contrast meets WCAG AA (4.5:1 minimum)
+      - Focus rings visible on all interactive elements (ring-2 ring-ring ring-offset-2)
+      - All icon buttons have aria-label attributes
+      - Semantic HTML with proper heading hierarchy
     </design_polish>
   </success_criteria>
 </project_specification>

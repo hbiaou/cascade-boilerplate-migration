@@ -34,19 +34,19 @@ Cascade defines a sequence of agents for migrating and developing applications. 
 
 - **Agent File:** `.claude/agents/ai-studio-migration.md`
 - **Command:** `@ai-studio-migration`
-- **Role:** Migrates a Google AI Studio exported app from buildless CDN-based architecture to production-ready local project with proper build tooling.
+- **Role:** Migrates a Google AI Studio exported app from buildless CDN-based architecture to production-ready local project with proper build tooling. **Also installs professional design foundation** (CVA, clsx, tailwind-merge, lucide-react) and enhances Tailwind config with CSS variable-based design tokens.
 - **Input:** AI Studio export directory (extracted ZIP file)
 - **Output:** `migration_report.txt` - Complete documentation of migration process, tech stack, file structure changes, and dependencies
-- **Why:** Google AI Studio exports use a buildless architecture with CDN imports. This agent converts them to proper npm-based projects with build tooling (Vite/Next.js).
+- **Why:** Google AI Studio exports use a buildless architecture with CDN imports. This agent converts them to proper npm-based projects with build tooling (Vite/Next.js) and adds professional design infrastructure to avoid "AI slop" aesthetics.
 
 ### 2. The Specification Writer (Architect) - First Call
 
 - **Agent File:** `.claude/agents/architect.md`
 - **Command:** `@architect`
-- **Role:** Analyzes the migrated app and generates a comprehensive technical specification file.
+- **Role:** Analyzes the migrated app and generates a comprehensive technical specification file. **Acts as both technical architect AND design system analyst**, creating pixel-perfect design specifications to avoid generic "AI slop" aesthetics.
 - **Input:** `migration_report.txt` (required), migrated code structure
-- **Output:** `app_spec.txt` - Complete technical specification in XML format based on migrated app
-- **Why:** Creates a single source of truth for all future agents. The architect analyzes the migrated code to extract features, components, and tech stack, then generates the specification. Also interacts with user to determine database preferences for the next step.
+- **Output:** `app_spec.txt` - Complete technical specification in XML format with detailed design_system section (color palette, typography, component specs, animations)
+- **Why:** Creates a single source of truth for all future agents. The architect analyzes the migrated code to extract features, components, and tech stack, then generates the specification with professional design standards. Also interacts with user to determine database AND design aesthetic preferences (Distinctive Creative, Professional Dashboard, Minimal Refined, or Custom Brand).
 
 ### 3. The Database Migration Agent (Optional)
 
@@ -75,19 +75,20 @@ Cascade defines a sequence of agents for migrating and developing applications. 
 - **Command:** `@project-initializer`
 - **Role:** Sets up the foundation for testing and development of the migrated app. Works with existing migrated project structure.
 - **Input:** `app_spec.txt` (required), `migration_report.txt` (required), `db_schema.txt` (optional, if database migration occurred)
-- **Output:** `feature_list.json` (25-50 test cases for migrated features), `init.sh` (environment setup), `.gitignore`, git repository initialization
-- **Key Task:** Generates `feature_list.json` containing **25-50** strictly defined test cases (functional & stylistic) to verify migrated app features work correctly.
-- **Why:** Creates the testing foundation. The project structure already exists from migration - this agent creates tests and setup scripts.
+- **Output:** `feature_list.json` (50-75 test cases: 30-45 functional + 20-30 visual design), `init.sh` (environment setup), `.gitignore`, git repository initialization
+- **Key Task:** Generates `feature_list.json` containing **50-75** strictly defined test cases to verify both functionality AND design quality. Includes pixel-perfect visual tests to enforce design_system specifications.
+- **Why:** Creates the testing foundation with emphasis on visual regression prevention. Test count increased from 25-50 to 50-75 to include comprehensive visual design validation (typography, colors, components, spacing, animations).
 
 ### 6. The Coding Agent (Developer)
 
 - **Agent File:** `.claude/agents/coder.md`
 - **Command:** `@coder`
-- **Role:** An iterative worker that picks **one** failing test, implements fixes or new features, and verifies it using browser automation.
+- **Role:** An iterative worker that picks **one** failing test, implements fixes or new features with pixel-perfect design quality, and verifies it using browser automation. **Enforces Visual Quality Mandate** to prevent generic "AI slop" aesthetics.
 - **Input:** `app_spec.txt`, `feature_list.json`, `init.sh` (required), `migration_report.txt`, `db_schema.txt`, `claude-progress.txt` (optional)
 - **Output:** Application code files (unpredictable, depends on tech stack), updates to `feature_list.json` (pass/fail status only), updates to `claude-progress.txt`
-- **Tooling:** Configured to use **Playwright MCP** for visual regression testing and end-to-end verification.
-- **Constraint:** Cannot move to feature B until feature A passes.
+- **Tooling:** Configured to use **Playwright MCP** for visual regression testing and end-to-end verification. Uses DevTools inspection to verify pixel-perfect implementation.
+- **Design Enforcement:** Before implementing ANY UI component, reads design_system section from app_spec.txt and uses EXACT Tailwind classes, CSS variables, and specifications. Verifies with DevTools that computed styles match spec.
+- **Constraint:** Cannot move to feature B until feature A passes (both functional AND visual tests).
 
 ### 7. The Release Engineer (Finalization)
 
@@ -251,7 +252,7 @@ The agent will:
 - Migrate environment variables
 - Create `migration_report.txt`
 
-### Step 3: Generate Specification
+### Step 3: Generate Specification with Design System
 
 Run the Architect agent (first call):
 
@@ -262,8 +263,20 @@ Run the Architect agent (first call):
 The agent will:
 - Analyze the migrated app structure
 - Extract features and components
+- **Ask you about design aesthetic preference:**
+  - Option 1: Distinctive Creative Theme (recommended - unique, memorable)
+  - Option 2: Professional Dashboard (clean, data-focused)
+  - Option 3: Minimal Refined (understated elegance)
+  - Option 4: Custom Brand (provide your brand colors/fonts)
 - Ask you about database preferences
-- Generate `app_spec.txt` based on the migrated app
+- Generate `app_spec.txt` with:
+  - Complete technical specification
+  - **Detailed design_system section** with:
+    - Creative color palette (NOT purple gradients or blue-500 defaults)
+    - Distinctive typography (NOT Inter/Roboto/Arial)
+    - Pixel-perfect component specifications (exact Tailwind classes)
+    - Atmospheric backgrounds (NOT flat white)
+    - Animation specifications
 
 ### Step 4: (Optional) Migrate Database
 
@@ -300,7 +313,10 @@ The agent will:
 
 The agent will:
 - Read `app_spec.txt` and `migration_report.txt`
-- Generate `feature_list.json` with tests for migrated features
+- Generate `feature_list.json` with **50-75 tests** for migrated features:
+  - **30-45 functional tests** (features, API, database)
+  - **20-30 visual design tests** (typography, colors, components, spacing, animations)
+  - All visual tests are **pixel-perfect** with DevTools verification steps
 - Create `init.sh` for development environment
 - Initialize git repository (if not already done)
 
