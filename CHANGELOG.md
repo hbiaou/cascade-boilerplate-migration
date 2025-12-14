@@ -5,6 +5,112 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2025-12-14
+
+### Added
+
+- **Professional Design Foundation System** - Complete infrastructure to prevent generic "AI slop" aesthetics
+  - Design utility installation in `ai-studio-migration` agent:
+    - `class-variance-authority` (CVA) for component variant management
+    - `clsx` for conditional class name composition
+    - `tailwind-merge` for Tailwind class conflict resolution
+    - `lucide-react` icon library
+  - Enhanced Tailwind configuration with CSS variable-based design tokens
+    - Complete color palette (primary, accent, muted, destructive, etc.)
+    - Responsive border radius tokens
+    - Font family configuration (`font-heading`, `font-body`)
+    - shadcn/ui design system compatibility
+  - CSS variables for light and dark mode theming
+    - Semantic color tokens with HSL format for flexibility
+    - Font family CSS variables (`--font-heading`, `--font-body`)
+
+- **Design System Analyst Role in Architect Agent**
+  - Step 2.5: Comprehensive design system template with 4 example themes:
+    - Warm Terracotta (creative/lifestyle apps)
+    - Deep Ocean (productivity/analytics)
+    - Forest Sage (wellness/nature apps)
+    - Midnight Crimson (bold/editorial)
+  - User design preference question with 4 options:
+    - Distinctive Creative Theme (unique, memorable)
+    - Professional Dashboard (clean, data-focused)
+    - Minimal Refined (understated elegance)
+    - Custom Brand (user-provided guidelines)
+  - Complete design_system section template in app_spec.txt:
+    - Color palette specifications (HSL CSS variables)
+    - Typography specifications (distinctive fonts with CSS variables)
+    - Component specifications (exact Tailwind classes)
+    - Background/atmosphere specifications
+    - Spacing system (4px grid)
+    - Animation specifications
+    - Accessibility requirements
+  - Anti-slop aesthetics mandate:
+    - Forbids generic fonts (Inter, Roboto, Arial, Space Grotesk)
+    - Forbids clichéd color schemes (purple gradients, blue-500 defaults)
+    - Forbids predictable layouts (flat white backgrounds)
+
+- **Pixel-Perfect Test Requirements in Project Initializer**
+  - Enhanced test categories with Visual Design Quality section:
+    - Typography tests (5 tests)
+    - Color palette tests (5 tests)
+    - Component specification tests (5 tests)
+    - Responsive design tests (3 tests)
+    - Accessibility tests
+    - Polish tests
+  - 6 pixel-perfect test examples:
+    - Card component specifications
+    - Typography hierarchy verification
+    - Button interactive states
+    - Color palette consistency
+    - Background atmosphere
+    - Spacing/sizing precision
+  - Updated test quantity guidelines: 50-75 tests total
+    - 30-45 functional tests
+    - 20-30 visual design tests
+
+- **Visual Quality Mandate in Coder Agent**
+  - Anti-patterns documentation:
+    - Generic font usage examples
+    - Lazy color implementation patterns
+    - Arbitrary spacing violations
+  - Design System First approach:
+    - 7-step verification checklist
+    - Code examples (wrong vs. correct)
+    - CSS variable usage patterns
+  - Enhanced verification with 8 visual regression check categories:
+    - Color & contrast issues
+    - Typography problems
+    - Layout & spacing issues
+    - Component styling issues
+    - Interactive states issues
+    - Animation issues
+    - Background & atmosphere
+    - Console & polish
+  - Visual Verification Process with example fix workflow
+  - DevTools inspection requirements for pixel-perfect implementation
+
+### Changed
+
+- Updated `AI_WORKFLOW.md` to reflect design foundation across all agent descriptions
+- Test count increased from 25-50 to 50-75 to include comprehensive visual design validation
+- Architect agent now acts as both technical architect AND design system analyst
+- Migration verification checklist includes design foundation checks
+- All agent workflows updated to emphasize pixel-perfect design quality
+
+### Fixed
+
+- Step numbering in `architect` agent (merged STEP 3 and STEP 3.5 for logical flow)
+- Populated empty `design_system` section in app_spec.txt template
+- Added font family Tailwind configuration to support `font-heading` and `font-body` classes
+- Added `--font-heading` and `--font-body` CSS variables to migration agent output
+- Updated typography hierarchy in architect template to use font utility classes
+
+### Technical Details
+
+- Total additions: ~1,411 lines across 6 files
+- Design foundation prevents visual regression in migrated apps
+- Ensures professional, pixel-perfect design quality from migration through development
+- Complete workflow integration from ai-studio-migration → architect → project-initializer → coder
+
 ## [0.3.1] - 2025-12-13
 
 ### Fixed
@@ -84,6 +190,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - AI_WORKFLOW.md documentation outlining the complete migration process
 - Git configuration with appropriate ignore rules
 
+[0.4.0]: https://github.com/hbiaou/cascade-boilerplate-migration/releases/tag/v0.4.0
 [0.3.1]: https://github.com/hbiaou/cascade-boilerplate-migration/releases/tag/v0.3.1
 [0.3.0]: https://github.com/hbiaou/cascade-boilerplate-migration/releases/tag/v0.3.0
 [0.2.0]: https://github.com/hbiaou/cascade-boilerplate-migration/releases/tag/v0.2.0
