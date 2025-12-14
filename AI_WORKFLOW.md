@@ -39,11 +39,12 @@ Cascade defines a sequence of agents for migrating and developing applications. 
 - **Output:** `migration_report.txt` - Complete documentation of migration process, tech stack, file structure changes, and dependencies
 - **Why:** Google AI Studio exports use a buildless architecture with CDN imports. This agent converts them to proper npm-based projects with build tooling (Vite/Next.js) and adds professional design infrastructure to avoid "AI slop" aesthetics.
 
-### 2. The Specification Writer (Architect) - First Call
+### 2. The Specification Writer (Architect) - First Call (Mode 1)
 
 - **Agent File:** `.claude/agents/architect.md`
 - **Command:** `@architect`
 - **Role:** Analyzes the migrated app and generates a comprehensive technical specification file. **Acts as both technical architect AND design system analyst**, creating pixel-perfect design specifications to avoid generic "AI slop" aesthetics.
+- **Mode:** Mode 1 - Migration specification generation
 - **Input:** `migration_report.txt` (required), migrated code structure
 - **Output:** `app_spec.txt` - Complete technical specification in XML format with detailed design_system section (color palette, typography, component specs, animations)
 - **Why:** Creates a single source of truth for all future agents. The architect analyzes the migrated code to extract features, components, and tech stack, then generates the specification with professional design standards. Also interacts with user to determine database AND design aesthetic preferences (Distinctive Creative, Professional Dashboard, Minimal Refined, or Custom Brand).
@@ -60,20 +61,22 @@ Cascade defines a sequence of agents for migrating and developing applications. 
 - **When to use:** Only if the migrated app has a database that needs to be migrated to a new system.
 - **Why:** Handles schema design, data migration, ID mapping, and code updates for database changes.
 
-### 4. The Specification Writer (Architect) - Second Call
+### 4. The Specification Writer (Architect) - Second Call (Mode 2)
 
 - **Agent File:** `.claude/agents/architect.md`
 - **Command:** `@architect`
 - **Role:** Updates the existing `app_spec.txt` with database schema information from the database migration.
+- **Mode:** Mode 2 - Database update
 - **Input:** `app_spec.txt` (required), `db_migration_report.txt` (required), `db_schema.txt` (required)
 - **Output:** Updated `app_spec.txt` with complete database schema section
 - **Why:** Ensures the specification includes complete database information after migration.
 
-### 5. The Project Initializer (Project Lead)
+### 5. The Project Initializer (Project Lead) - Mode 1
 
 - **Agent File:** `.claude/agents/project-initializer.md`
 - **Command:** `@project-initializer`
 - **Role:** Sets up the foundation for testing and development of the migrated app. Works with existing migrated project structure.
+- **Mode:** Mode 1 - Migration initialization
 - **Input:** `app_spec.txt` (required), `migration_report.txt` (required), `db_schema.txt` (optional, if database migration occurred)
 - **Output:** `feature_list.json` (50-75 test cases: 30-45 functional + 20-30 visual design), `init.sh` (environment setup), `.gitignore`, git repository initialization
 - **Key Task:** Generates `feature_list.json` containing **50-75** strictly defined test cases to verify both functionality AND design quality. Includes pixel-perfect visual tests to enforce design_system specifications.
@@ -107,13 +110,14 @@ cascade/
 ├── .claude/
 │   └── agents/
 │       ├── ai-studio-migration.md      # Agent 1: Migrates AI Studio export
-│       ├── architect.md                # Agent 2 & 4: Generates/updates app_spec.txt
+│       ├── architect.md                # Agent 2, 4, & Improvement: Generates/updates specs
 │       ├── db-migration.md             # Agent 3 (Optional): Database migration
-│       ├── project-initializer.md      # Agent 5: Sets up testing foundation
-│       ├── coder.md                    # Agent 6: Implements/verifies features
-│       └── release-engineer.md         # Agent 7: Versioning & releases
+│       ├── project-initializer.md      # Agent 5 & Improvement: Sets up testing foundation
+│       ├── coder.md                    # Agent 6: Implements/verifies features & improvements
+│       └── release-engineer.md         # Agent 7: Versioning & releases (automatic)
 ├── templates/
-│   └── app_spec_example.txt            # Reference implementation of a spec file
+│   ├── app_spec_example.txt            # Reference implementation of a spec file
+│   └── improvement_spec_example.txt    # Reference implementation for improvements
 └── AI_WORKFLOW.md
 ```
 
@@ -149,10 +153,57 @@ Each agent has specific trigger conditions:
 
 ### Improvement Workflow Agents
 
-- **`@architect`** (Mode 3): Use when you want to add new features/improvements to an existing app. This creates `improvement_spec.txt`.
-- **`@project-initializer`** (Mode 2): Use after `improvement_spec.txt` exists. This creates `improvement_list.json` with tests for improvements.
-- **`@coder`** (Improvement mode): Automatically detects and prioritizes `improvement_list.json`. Implements improvements and merges them into `feature_list.json` when complete.
-- **`@release-engineer`**: Still called AUTOMATICALLY after each improvement completion.
+- **`@architect`** (Mode 3): Use when you want to add new features/improvements to an existing migrated app. Requires `app_spec.txt` to exist. Creates `improvement_spec.txt` with detailed specifications for new features.
+- **`@project-initializer`** (Mode 2): Use after `improvement_spec.txt` exists. Requires both `improvement_spec.txt` and `app_spec.txt`. Creates `improvement_list.json` with 5-25 test cases focused on new/changed functionality and integration tests.
+- **`@coder`** (Improvement mode): Automatically detects and prioritizes `improvement_list.json` when it exists. Implements improvements one by one, verifies each with browser automation, and automatically merges completed improvements into `feature_list.json`.
+- **`@release-engineer`**: Still called AUTOMATICALLY after each improvement completion (typically PATCH version bumps).
+
+---
+
+## Agent Modes Summary
+
+### Architect Agent - Three Modes
+
+The `architect` agent operates in three distinct modes, automatically detected based on context:
+
+1. **Mode 1 - Migration Specification:** Generates initial `app_spec.txt` from migrated app
+   - Triggered by: Presence of `migration_report.txt`, absence of `app_spec.txt`
+   - Input: `migration_report.txt`, migrated code
+   - Output: `app_spec.txt` with complete technical and design specifications
+
+2. **Mode 2 - Database Update:** Updates `app_spec.txt` with database schema
+   - Triggered by: Presence of `app_spec.txt`, `db_migration_report.txt`, `db_schema.txt`
+   - Input: Existing `app_spec.txt`, database migration outputs
+   - Output: Updated `app_spec.txt` with database section
+
+3. **Mode 3 - Improvement Specification:** Creates improvement specifications
+   - Triggered by: User request to add new features/improvements
+   - Input: Existing `app_spec.txt`, user requirements
+   - Output: `improvement_spec.txt` with detailed improvement requirements
+
+### Project Initializer Agent - Two Modes
+
+The `project-initializer` agent operates in two modes, automatically detected:
+
+1. **Mode 1 - Migration Initialization:** Creates testing foundation for migrated app
+   - Triggered by: Presence of `app_spec.txt` + `migration_report.txt`
+   - Output: `feature_list.json` (50-75 tests), `init.sh`, git initialization
+
+2. **Mode 2 - Improvement Initialization:** Creates test tracking for improvements
+   - Triggered by: Presence of `improvement_spec.txt` + `app_spec.txt`
+   - Output: `improvement_list.json` (5-25 tests)
+   - Note: Does NOT require `migration_report.txt`
+
+### Coder Agent - Two Modes
+
+The `coder` agent automatically prioritizes work based on which files exist:
+
+1. **Improvement Mode:** When `improvement_list.json` exists
+   - Prioritizes improvements over standard features
+   - Merges completed improvements into `feature_list.json`
+
+2. **Standard Mode:** When only `feature_list.json` exists
+   - Implements and verifies features from migration
 
 ---
 
@@ -199,6 +250,11 @@ The architect will:
 ```
 
 The project-initializer will:
+- **Automatically detect Mode 2** (Improvement mode) when `improvement_spec.txt` exists
+- Validate prerequisites:
+  - `improvement_spec.txt` (required)
+  - `app_spec.txt` (required)
+  - Note: Does NOT require `migration_report.txt` (Mode 2 specific)
 - Read `improvement_spec.txt` and `app_spec.txt`
 - Generate `improvement_list.json` with 5-25 test cases
 - Include integration tests to verify compatibility with existing features
@@ -223,11 +279,14 @@ The release-engineer is called automatically after each improvement completion, 
 
 ### Key Differences from Migration Workflow
 
-1. **Smaller Scope:** Improvements typically have 5-25 tests vs. 25-50 for migration
+1. **Smaller Scope:** Improvements typically have 5-25 tests vs. 50-75 for migration
 2. **Integration Focus:** Improvement tests emphasize compatibility with existing features
 3. **Separate Tracking:** `improvement_list.json` exists separately until all improvements complete
 4. **Automatic Merge:** When all improvements pass, they're merged into `feature_list.json`
 5. **Iterative:** You can run this workflow multiple times to continuously add features
+6. **Mode-Aware Prerequisites:** The `project-initializer` automatically detects which mode to use based on which files exist:
+   - Mode 1 (Migration): Requires `app_spec.txt` + `migration_report.txt`
+   - Mode 2 (Improvement): Requires `improvement_spec.txt` + `app_spec.txt` (no migration_report.txt needed)
 
 ---
 
