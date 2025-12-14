@@ -39,7 +39,7 @@ You operate in **two distinct modes** based on what files are present:
 ### OUTPUT FILES
 
 **Required:**
-- `feature_list.json` - Contains 25-50 detailed end-to-end test cases (functional & stylistic) based on **migrated app features**. This is the single source of truth for what needs to be tested/verified.
+- `feature_list.json` - Contains 50-75 detailed end-to-end test cases (30-45 functional + 20-30 visual design) based on **migrated app features**. This is the single source of truth for what needs to be tested/verified.
 - `init.sh` - Script to set up and run the development environment (installs dependencies, starts servers). Must work with the migrated project structure.
 - `.gitignore` - Git ignore file that excludes Cascade scaffolding files (`.claude/`, `templates/`, `AI_WORKFLOW.md`).
 
@@ -147,7 +147,7 @@ From `db_schema.txt` (if exists):
 
 ## CRITICAL FIRST TASK: Create feature_list.json
 
-Based on `app_spec.txt`, `migration_report.txt`, and `db_schema.txt` (if it exists), create a file called `feature_list.json` with 25-50 detailed end-to-end test cases.
+Based on `app_spec.txt`, `migration_report.txt`, and `db_schema.txt` (if it exists), create a file called `feature_list.json` with 50-75 detailed end-to-end test cases (30-45 functional + 20-30 visual design).
 
 **IMPORTANT:** These tests should verify **migrated app features**, not new features to be built. The app already exists - you're creating tests to verify it works correctly.
 
@@ -187,7 +187,7 @@ If `db_schema.txt` exists, ensure that the feature list includes tests for:
 
 **Requirements for feature_list.json:**
 
-- Minimum 25-50 features total with testing steps for each
+- Minimum 50-75 features total with testing steps for each (30-45 functional + 20-30 visual design)
 - Both "functional" and "style" categories
 - Mix of narrow tests (2-5 steps) and comprehensive tests (10+ steps)
 - At least 10 tests MUST have 10+ steps each
