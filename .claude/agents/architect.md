@@ -402,7 +402,7 @@ The Tailwind config has been enhanced with CSS variable-based design tokens. You
 
 The coder agent will implement these specifications EXACTLY as written.
 
-### STEP 3: INTERACT WITH USER FOR DATABASE PREFERENCES
+### STEP 3: INTERACT WITH USER FOR DATABASE AND DESIGN PREFERENCES
 
 **CRITICAL:** Before generating the spec, ask the user about database preferences:
 
@@ -417,9 +417,7 @@ The coder agent will implement these specifications EXACTLY as written.
 
 **Note the user's choice** - this will be used by the db-migration agent later.
 
-### STEP 3.5: INTERACT WITH USER FOR DESIGN PREFERENCE
-
-**CRITICAL:** Ask the user about their design aesthetic preference to guide the design system specification:
+**Then, ask about design aesthetic preference:**
 
 > "Now let's choose a design aesthetic for your app. I'll create a professional design system based on your preference:
 >
@@ -518,8 +516,132 @@ Create `app_spec.txt` based on your analysis. Use the following XML structure:
   </ui_layout>
 
   <design_system>
-    [Styling approach from migration_report.txt]
-    [Tailwind CSS if used]
+    <philosophy>
+      [Insert chosen aesthetic philosophy from Step 3 user preference]
+      [Avoid: Generic fonts (Inter, Roboto, Arial), purple gradients, blue-500 defaults, flat white backgrounds]
+    </philosophy>
+
+    <color_palette>
+      <!-- Populate based on user's Step 3 choice: Distinctive Creative, Professional Dashboard, Minimal Refined, or Custom Brand -->
+      <!-- Use CSS variable format: --primary: H S% L%; -->
+      <light_mode>
+        --background: [H S% L%];
+        --foreground: [H S% L%];
+        --primary: [H S% L%];
+        --primary-foreground: [H S% L%];
+        --accent: [H S% L%];
+        --accent-foreground: [H S% L%];
+        --muted: [H S% L%];
+        --muted-foreground: [H S% L%];
+        --card: [H S% L%];
+        --card-foreground: [H S% L%];
+        --border: [H S% L%];
+        --input: [H S% L%];
+        --ring: [H S% L%];
+      </light_mode>
+
+      <dark_mode>
+        --background: [H S% L%];
+        --foreground: [H S% L%];
+        --primary: [H S% L%];
+        --primary-foreground: [H S% L%];
+        --accent: [H S% L%];
+        --accent-foreground: [H S% L%];
+        --muted: [H S% L%];
+        --muted-foreground: [H S% L%];
+        --card: [H S% L%];
+        --card-foreground: [H S% L%];
+        --border: [H S% L%];
+        --input: [H S% L%];
+        --ring: [H S% L%];
+      </dark_mode>
+    </color_palette>
+
+    <typography>
+      <headings>
+        Font Family: [Choose distinctive font - examples: Playfair Display, Merriweather, Crimson Text for serif; Montserrat, Raleway for sans-serif - NOT Inter/Roboto/Arial]
+        Fallback: serif OR sans-serif
+        CSS Variable: --font-heading: "[Font Name]", [fallback stack];
+      </headings>
+      <body>
+        Font Family: [Choose readable font - examples: Source Sans Pro, Open Sans, Lora - NOT Inter/Roboto/Arial]
+        Fallback: sans-serif OR serif
+        CSS Variable: --font-body: "[Font Name]", [fallback stack];
+      </body>
+      <hierarchy>
+        <!-- Exact Tailwind classes for consistent hierarchy -->
+        <!-- Use font-heading for headings, font-body for body text -->
+        H1: font-heading text-4xl md:text-5xl font-bold tracking-tight
+        H2: font-heading text-3xl md:text-4xl font-semibold tracking-tight
+        H3: font-heading text-2xl md:text-3xl font-semibold
+        H4: font-heading text-xl md:text-2xl font-medium
+        Body: font-body text-base leading-relaxed
+        Small: font-body text-sm text-muted-foreground
+      </hierarchy>
+    </typography>
+
+    <component_specifications>
+      <!-- Exact Tailwind classes for every component type -->
+      <button>
+        Base: inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50
+        Primary: bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2
+        Secondary: bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2
+        Outline: border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2
+      </button>
+
+      <card>
+        Container: rounded-xl border bg-card text-card-foreground shadow-sm
+        Header: flex flex-col space-y-1.5 p-6
+        Content: p-6 pt-0
+        Footer: flex items-center p-6 pt-0
+      </card>
+
+      <input>
+        Base: flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50
+      </input>
+
+      <badge>
+        Base: inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2
+        Default: border-transparent bg-primary text-primary-foreground hover:bg-primary/80
+        Secondary: border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80
+      </badge>
+    </component_specifications>
+
+    <backgrounds>
+      <approach>[Choose based on aesthetic: gradient, subtle texture, atmospheric color, NOT flat white]</approach>
+      <main_background>[Example: "bg-gradient-to-br from-background via-background to-accent/5" OR "bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-background to-background"]</main_background>
+      <card_treatment>[Example: "bg-card/80 backdrop-blur-sm" for frosted glass effect]</card_treatment>
+    </backgrounds>
+
+    <spacing>
+      <!-- Use 4px spacing grid (space-y-4, gap-6, p-6) - NO arbitrary values like p-[17px] -->
+      Container padding: p-6 md:p-8 lg:p-12
+      Section spacing: space-y-8 md:space-y-12
+      Card spacing: p-6
+      Stack spacing: space-y-4
+      Grid gap: gap-6
+    </spacing>
+
+    <animations>
+      <hover_states>
+        Buttons: hover:scale-105 transition-transform
+        Cards: hover:shadow-lg transition-shadow duration-300
+        Links: hover:text-primary transition-colors
+      </hover_states>
+      <page_transitions>
+        Fade in: animate-in fade-in duration-500
+        Slide up: animate-in slide-in-from-bottom-4 duration-700
+      </page_transitions>
+      <key_moments>
+        [Define 2-3 signature animations for important interactions]
+      </key_moments>
+    </animations>
+
+    <accessibility>
+      Focus rings: focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+      Color contrast: Ensure all text meets WCAG AA standards (4.5:1 for normal text, 3:1 for large text)
+      Interactive states: All buttons and links must have visible hover and focus states
+    </accessibility>
   </design_system>
 
   <key_interactions>

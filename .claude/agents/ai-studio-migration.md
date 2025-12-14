@@ -312,6 +312,11 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      fontFamily: {
+        // Architect agent will specify distinctive fonts (NOT Inter/Roboto/Arial)
+        heading: ["var(--font-heading)", "serif"],
+        body: ["var(--font-body)", "sans-serif"],
+      },
     },
   },
   plugins: [],
@@ -348,6 +353,10 @@ export default {
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
+
+    /* Font families (architect agent will customize with distinctive fonts) */
+    --font-heading: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    --font-body: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
 
   .dark {
