@@ -641,54 +641,33 @@ npm run preview
 
 **Automated Comparison (Using Browser Tools):**
 
-If Playwright MCP tools are available, you can automate visual verification:
+If chrome-devtools MCP is available, you can automate visual verification:
 
-**IMPORTANT - Docker Browser Setup:**
+**Browser Setup:**
 
-The browser runs in a Docker container and requires special configuration to access your dev server.
+The chrome-devtools MCP server can access localhost directly (no Docker configuration needed).
 
-1. **Update `vite.config.ts` to allow Docker browser access:**
-
-   ```typescript
-   import { defineConfig } from 'vite'
-   import react from '@vitejs/plugin-react'
-
-   export default defineConfig({
-     plugins: [react()],
-     server: {
-       host: '0.0.0.0', // Listen on all interfaces
-       port: 5173,
-       strictPort: true,
-       allowedHosts: [
-         'host.docker.internal', // REQUIRED for Docker browser access
-         'localhost',
-         '127.0.0.1'
-       ]
-     }
-   })
-   ```
-
-2. **Restart the dev server:**
+1. **Start the dev server:**
 
    ```bash
    npm run dev
    ```
 
-3. **Navigate using `host.docker.internal` instead of `localhost`:**
+2. **Navigate to the app and capture screenshots:**
 
    ```typescript
-   // Use browser tools to navigate
-   browser_navigate("http://host.docker.internal:5173")
+   // Navigate to your dev server
+   navigate_page({ type: "url", url: "http://localhost:3000" })
 
    // Take screenshots to compare with original
-   browser_take_screenshot({ filename: "migrated-app.png" })
+   take_screenshot({ filePath: "migrated-app.png" })
    ```
 
-**Why this is needed:**
-- Browser runs in Docker container
-- `localhost` in container points to the container itself, not your host machine
-- `host.docker.internal` resolves to the host machine where Vite is running
-- Vite's `allowedHosts` prevents "Invalid Host header" errors
+3. **Compare with original:**
+
+   Open both versions side-by-side to verify visual consistency.
+
+**Note:** If using Playwright MCP instead (running in Docker), you'll need special configuration with `host.docker.internal` hostname. See the Known Issues section in README.md for details.
 
 #### 7.4.3 Common Styling Issues to Check
 

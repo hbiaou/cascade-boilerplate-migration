@@ -549,78 +549,70 @@ Before context fills up:
 
 **ALL testing must use browser automation tools.**
 
-### Browser Testing Setup (Docker Environment)
+### Browser Testing Setup
 
-**CRITICAL:** The browser runs in a Docker container and needs special configuration to access your dev server on the host machine.
+**NOTE:** The chrome-devtools MCP server can access localhost directly (no Docker container), so browser testing is straightforward.
 
-**Problem:** Browser cannot access `localhost` or `127.0.0.1` directly because those resolve to the container, not your host machine.
+**Standard Navigation:**
 
-**Solution:** Use `host.docker.internal` hostname and configure Vite to allow it.
-
-**Required Vite Configuration:**
-
-If you encounter browser connection errors (e.g., "Cannot connect to localhost:5173"), update `vite.config.ts`:
+When using browser tools, navigate to your development server URL directly:
 
 ```typescript
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+// Navigate to your dev server
+navigate_page({ type: "url", url: "http://localhost:3000" })
 
-export default defineConfig({
-  plugins: [react()],
-  server: {
-    host: '0.0.0.0', // Listen on all interfaces
-    port: 5173,
-    strictPort: true,
-    allowedHosts: [
-      'host.docker.internal', // REQUIRED for Docker browser access
-      'localhost',
-      '127.0.0.1'
-    ]
-  }
-})
+// Or if using a different port
+navigate_page({ type: "url", url: "http://localhost:5173" })
 ```
 
-**Browser Navigation:**
+**Important:** Make sure your development server is running before attempting browser automation tests. The default port for most projects is `localhost:3000`, but verify the correct port for your specific project (could be 5173 for Vite, 3000 for Next.js, etc.).
 
-When using browser tools, navigate to `http://host.docker.internal:5173` instead of `http://localhost:5173`:
+### Available Browser Tools (chrome-devtools MCP)
 
-```typescript
-// WRONG (in Docker environment)
-browser_navigate("http://localhost:5173")
+**Input Automation (8 tools):**
+* `click` - Activates an element on the page (parameters: uid, dblClick)
+* `drag` - Moves one element onto another (parameters: from_uid, to_uid)
+* `fill` - Enters text into input fields, text areas, or selects options from dropdowns (parameters: uid, value)
+* `fill_form` - Populates multiple form fields simultaneously (parameters: elements array)
+* `handle_dialog` - Responds to browser dialogs (parameters: action="accept"/"dismiss", promptText)
+* `hover` - Positions mouse over an element (parameters: uid)
+* `press_key` - Executes keyboard actions and combinations (parameters: key, supports Control, Shift, Alt, Meta)
+* `upload_file` - Submits files through file input elements (parameters: filePath, uid)
 
-// CORRECT (in Docker environment)
-browser_navigate("http://host.docker.internal:5173")
-```
+**Navigation Automation (6 tools):**
+* `close_page` - Closes a specified browser tab (parameters: pageIdx)
+* `list_pages` - Retrieves all open tabs
+* `navigate_page` - Changes page location or history (parameters: type, url, timeout, ignoreCache)
+* `new_page` - Opens a new tab (parameters: url, timeout)
+* `select_page` - Switches active tab for operations (parameters: pageIdx, bringToFront)
+* `wait_for` - Pauses until specified text displays (parameters: text, timeout)
 
-**After updating vite.config.ts:**
-1. Restart the Vite dev server (`npm run dev`)
-2. Verify browser can now access the app
-3. Proceed with testing
+**Emulation (2 tools):**
+* `emulate` - Simulates device features and network conditions (parameters: cpuThrottlingRate, geolocation, networkConditions)
+* `resize_page` - Adjusts viewport dimensions (parameters: width, height)
 
-### Available Browser Tools
+**Performance (3 tools):**
+* `performance_analyze_insight` - Details performance metrics from trace recordings (parameters: insightName, insightSetId)
+* `performance_start_trace` - Initiates performance recording and Core Web Vital tracking (parameters: autoStop, reload)
+* `performance_stop_trace` - Terminates active performance recording
 
-* `browser_click` - Click
-* `browser_close` - Close browser
-* `browser_console_messages` - Get console messages
-* `browser_drag` - Drag mouse
-* `browser_evaluate` - Evaluate JavaScript (use sparingly, only for debugging)
-* `browser_file_upload` - Upload files
-* `browser_fill_form` - Fill form
-* `browser_handle_dialog` - Handle a dialog
-* `browser_hover` - Hover mouse
-* `browser_install` - Install the browser specified in the config
-* `browser_navigate` - Navigate to a URL
-* `browser_navigate_back` - Go back
-* `browser_network_requests` - List network requests
-* `browser_press_key` - Press a key
-* `browser_resize` - Resize browser window
-* `browser_run_code` - Run Playwright code
-* `browser_select_option` - Select option
-* `browser_snapshot` - Page snapshot
-* `browser_tabs` - Manage tabs
-* `browser_take_screenshot` - Take a screenshot (critical for verification)
-* `browser_type` - Type text
-* `browser_wait_for` - Wait for
+**Network (2 tools):**
+* `get_network_request` - Retrieves specific network request details (parameters: reqid)
+* `list_network_requests` - Displays all network activity since navigation (parameters: resourceTypes, pageIdx, pageSize, includePreservedRequests)
+
+**Debugging (5 tools):**
+* `evaluate_script` - Executes JavaScript and returns JSON-serializable results (parameters: function, args)
+* `get_console_message` - Retrieves specific console output (parameters: msgid)
+* `list_console_messages` - Shows all console activity since navigation (parameters: types, pageIdx, pageSize, includePreservedMessages)
+* `take_screenshot` - Captures visual display as image file (parameters: uid, fullPage, format, quality, filePath) - **Critical for verification**
+* `take_snapshot` - Generates accessibility tree text representation (parameters: verbose, filePath)
+
+**Usage Examples:**
+* "Verify in the browser that your change works as expected"
+* "A few images on localhost:3000 are not loading. What's happening?"
+* "Why does submitting the form fail after entering an email address?"
+* "The page looks strange and off. Check what's happening there"
+* "Localhost:3000 is loading slowly. Make it load faster"
 
 Test like a human user with mouse and keyboard. Don't take shortcuts by using JavaScript evaluation.
 Always capture a screenshot after key interactions to verify visual state.

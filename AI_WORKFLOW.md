@@ -12,7 +12,7 @@ As a boilerplate, this project aims to:
 
 1. **Migrate Existing Apps:** Transform Google AI Studio exports into production-ready local projects.
 2. **Enforce Standards:** Ensure every migrated project has a robust specification (`app_spec.txt`) and a rigorous testing plan (`feature_list.json`).
-3. **Ensure Quality:** Mandate a "Test-First" development approach using real browser automation (Playwright) rather than fragile DOM emulation.
+3. **Ensure Quality:** Mandate a "Test-First" development approach using real browser automation (chrome-devtools MCP) rather than fragile DOM emulation.
 
 ## The Migration-Focused Workflow
 
@@ -89,7 +89,7 @@ Cascade defines a sequence of agents for migrating and developing applications. 
 - **Role:** An iterative worker that picks **one** failing test, implements fixes or new features with pixel-perfect design quality, and verifies it using browser automation. **Enforces Visual Quality Mandate** to prevent generic "AI slop" aesthetics.
 - **Input:** `app_spec.txt`, `feature_list.json`, `init.sh` (required), `migration_report.txt`, `db_schema.txt`, `claude-progress.txt` (optional)
 - **Output:** Application code files (unpredictable, depends on tech stack), updates to `feature_list.json` (pass/fail status only), updates to `claude-progress.txt`
-- **Tooling:** Configured to use **Playwright MCP** for visual regression testing and end-to-end verification. Uses DevTools inspection to verify pixel-perfect implementation.
+- **Tooling:** Configured to use **chrome-devtools MCP** for visual regression testing and end-to-end verification. Uses DevTools inspection to verify pixel-perfect implementation.
 - **Design Enforcement:** Before implementing ANY UI component, reads design_system section from app_spec.txt and uses EXACT Tailwind classes, CSS variables, and specifications. Verifies with DevTools that computed styles match spec.
 - **Constraint:** Cannot move to feature B until feature A passes (both functional AND visual tests).
 
@@ -134,8 +134,9 @@ cascade/
 To use Cascade effectively, you need:
 
 1. **An LLM Interface:** (e.g., Claude Code, Google Antigravity, Cursor, or a CLI).
-2. **Playwright MCP Server:** The Coding Agent is configured to use the Model Context Protocol (MCP) to control a headless browser.
-   - *Required Tools:* `browser_navigate`, `browser_click`, `browser_take_screenshot`, etc.
+2. **Chrome DevTools MCP Server:** The Coding Agent is configured to use the Model Context Protocol (MCP) to control Chrome DevTools for browser automation.
+   - *Required Tools:* `navigate_page`, `click`, `fill`, `take_screenshot`, `take_snapshot`, etc.
+   - *Alternative:* Playwright MCP Server can be used instead by modifying the tool references in the `@coder` agent file.
 
 ## When to Use Which Agent
 
@@ -148,7 +149,7 @@ Each agent has specific trigger conditions:
 - **`@architect`** (Mode 2): Use after database migration to update `app_spec.txt` with database schema.
 - **`@db-migration`**: Use only if the migrated app has a database that needs to be migrated to a new system. This creates `db_migration_report.txt` and `db_schema.txt`.
 - **`@project-initializer`** (Mode 1): Use after `app_spec.txt` exists (and optionally after database migration). This creates `feature_list.json` and `init.sh` for the migrated app.
-- **`@coder`** (Standard mode): Use repeatedly during development. Run this agent to verify and fix features one at a time from `feature_list.json`.
+- **`@coder`** (Standard mode): Use repeatedly during development. Run this agent to verify and fix features one at a time from `feature_list.json`. Uses chrome-devtools MCP for browser automation and visual verification.
 - **`@release-engineer`**: Called AUTOMATICALLY by the coder agent after each feature completion. Can also be called manually for milestone releases.
 
 ### Improvement Workflow Agents

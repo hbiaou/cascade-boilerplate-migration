@@ -5,6 +5,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2025-12-15
+
+### Changed
+
+- **Browser Automation Migration:** Migrated from Playwright MCP to chrome-devtools MCP as the primary browser automation tool
+  - Updated `coder` agent with comprehensive chrome-devtools MCP tool reference (26 tools across 6 categories):
+    - Input Automation: click, drag, fill, fill_form, handle_dialog, hover, press_key, upload_file
+    - Navigation Automation: close_page, list_pages, navigate_page, new_page, select_page, wait_for
+    - Emulation: emulate, resize_page
+    - Performance: performance_analyze_insight, performance_start_trace, performance_stop_trace
+    - Network: get_network_request, list_network_requests
+    - Debugging: evaluate_script, get_console_message, list_console_messages, take_screenshot, take_snapshot
+  - Simplified Browser Testing Setup: Removed Docker configuration requirements
+    - chrome-devtools MCP accesses localhost directly (no Docker container)
+    - Navigation now uses standard localhost URLs (no host.docker.internal needed)
+  - Fixed default port references: Changed from localhost:5173 to localhost:3000
+  - Playwright MCP documented as alternative option with Docker configuration guidance
+  - Updated tool references across all agent documentation (AI_WORKFLOW.md, ai-studio-migration.md)
+
+### Added
+
+- **README.md** - Comprehensive project documentation
+  - Project overview and core philosophy
+  - Prerequisites section with chrome-devtools MCP as primary tool
+  - Complete workflow sequence and agent descriptions
+  - Quick start guide
+  - Iterative improvement workflow documentation
+  - Known Issues & Troubleshooting section for Playwright Docker setup
+  - Repository structure reference
+  - Acknowledgments and inspiration sources
+
+### Removed
+
+- Docker browser configuration from standard workflow (moved to Known Issues for Playwright users)
+- `IMPLEMENTATION_STATUS.md` file (no longer needed)
+
+### Fixed
+
+- Browser testing setup now correctly references localhost:3000 as default port
+- Visual verification in ai-studio-migration agent updated to use chrome-devtools MCP tools
+
+### Technical Details
+
+- Total changes: 75 additions, 214 deletions across 4 files
+- New file: README.md (comprehensive project documentation)
+- Simplified browser automation workflow eliminates Docker complexity
+- Maintains backward compatibility with Playwright option for users who prefer it
+
 ## [0.4.1] - 2025-12-14
 
 ### Changed
@@ -214,6 +262,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - AI_WORKFLOW.md documentation outlining the complete migration process
 - Git configuration with appropriate ignore rules
 
+[0.5.0]: https://github.com/hbiaou/cascade-boilerplate-migration/releases/tag/v0.5.0
 [0.4.1]: https://github.com/hbiaou/cascade-boilerplate-migration/releases/tag/v0.4.1
 [0.4.0]: https://github.com/hbiaou/cascade-boilerplate-migration/releases/tag/v0.4.0
 [0.3.1]: https://github.com/hbiaou/cascade-boilerplate-migration/releases/tag/v0.3.1
