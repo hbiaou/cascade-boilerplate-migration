@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2025-12-15
+
+### Added
+
+- **QA Engineer Agent:** Added `qa-engineer.md`, a new on-demand agent for Black-Box testing (browser automation) and documentation maintenance.
+  - Supports Smoke Tests, Targeted Scenarios, and Exploratory/Monkey Testing using `chrome-devtools` MCP.
+  - Generates structured `qa_report.md` for the Architect agent.
+  - Enforces strict no-code-modification rule (docs only).
+
+### Changed
+
+- **Workflow Update:** Updated `AI_WORKFLOW.md` to include coverage of the new QA Engineer agent.
+  - Defined explicit "On-Demand" role for QA.
+  - Added repository structure reference.
+
 ## [0.5.0] - 2025-12-15
 
 ### Changed
