@@ -85,6 +85,12 @@ Cascade defines a sequence of agents for migrating and developing applications. 
 - **Role:** Performs SemVer versioning, changelog updates, and git tagging. Called automatically by coder agent after each feature.
 - **Output:** Version manifests, `CHANGELOG.md`, annotated git tags
 
+#### 7. The QA Engineer (On-Demand)
+- **Command:** `@qa-engineer`
+- **Role:** Performs black-box testing (Smoke/Monkey/Scenario) using browser automation and maintains documentation. **Does not modify application code.**
+- **When to use:** Anytime you want to verify the app or update documentation.
+- **Output:** `qa_report.md` (for Architect), updated `README.md`/`docs/`
+
 ## Quick Start
 
 ### Step 1: Export from Google AI Studio
@@ -145,7 +151,8 @@ cascade/
 │       ├── db-migration.md             # Agent 3 (Optional): Database migration
 │       ├── project-initializer.md      # Agent 5 & Improvement: Sets up testing foundation
 │       ├── coder.md                    # Agent 6: Implements/verifies features
-│       └── release-engineer.md         # Agent 7: Versioning & releases (automatic)
+│       ├── release-engineer.md         # Agent 7: Versioning & releases (automatic)
+│       └── qa-engineer.md              # Agent 8 (On-Demand): QA & Documentation
 ├── templates/
 │   ├── app_spec_example.txt            # Reference implementation
 │   └── improvement_spec_example.txt    # Reference for improvements
