@@ -28,6 +28,7 @@ Cascade defines a sequence of agents for migrating and developing applications. 
 5. @project-initializer → feature_list.json (for migrated features)
 6. @coder → implements/verifies features
 7. @release-engineer → versioning (automatic)
+8. @qa-engineer → qa_report.md (On-Demand)
 ```
 
 ### 1. The AI Studio Migration Agent
@@ -103,6 +104,16 @@ Cascade defines a sequence of agents for migrating and developing applications. 
 - **When to use:** Called AUTOMATICALLY by the coder agent after each feature completion. Can also be called manually for milestone releases.
 - **Why:** Ensures professional, error-free releases following semantic versioning best practices.
 
+### 8. The QA Engineer (On-Demand)
+
+- **Agent File:** `.claude/agents/qa-engineer.md`
+- **Command:** `@qa-engineer`
+- **Role:** Performs on-demand Black-Box testing (Simulating User Journeys, Smoke Tests, Monkey Testing) and maintains documentation. **Strictly forbidden from modifying application codebase.**
+- **Input:** User testing request (e.g., "Run smoke test"), `app_spec.txt`, `.env` (credentials)
+- **Output:** `qa_report.md` (for Architect consumption) or updated Documentation (README, guides).
+- **When to use:** Anytime you need to simulate a user, verify a specific flow, or update documentation.
+- **Why:** Adds a layer of "human-like" quality assurance that automated unit tests miss. Can also generate visual bug reports and keep docs in sync with code.
+
 ## Repository Structure
 
 ```text
@@ -114,7 +125,8 @@ cascade/
 │       ├── db-migration.md             # Agent 3 (Optional): Database migration
 │       ├── project-initializer.md      # Agent 5 & Improvement: Sets up testing foundation
 │       ├── coder.md                    # Agent 6: Implements/verifies features & improvements
-│       └── release-engineer.md         # Agent 7: Versioning & releases (automatic)
+│       ├── release-engineer.md         # Agent 7: Versioning & releases (automatic)
+│       └── qa-engineer.md              # Agent 8: QA & Documentation (On-Demand)
 ├── templates/
 │   ├── app_spec_example.txt            # Reference implementation of a spec file
 │   └── improvement_spec_example.txt    # Reference implementation for improvements
@@ -158,6 +170,10 @@ Each agent has specific trigger conditions:
 - **`@project-initializer`** (Mode 2): Use after `improvement_spec.txt` exists. Requires both `improvement_spec.txt` and `app_spec.txt`. Creates `improvement_list.json` with 5-25 test cases focused on new/changed functionality and integration tests.
 - **`@coder`** (Improvement mode): Automatically detects and prioritizes `improvement_list.json` when it exists. Implements improvements one by one, verifies each with browser automation, and automatically merges completed improvements into `feature_list.json`.
 - **`@release-engineer`**: Still called AUTOMATICALLY after each improvement completion (typically PATCH version bumps).
+
+### On-Demand & Maintenance Agents
+
+- **`@qa-engineer`**: Use anytime for black-box testing, user journey simulation, or documentation updates. Generates `qa_report.md` which can be fed to `@architect` (Mode 3) to request fixes for found issues.
 
 ---
 
@@ -205,6 +221,18 @@ The `coder` agent automatically prioritizes work based on which files exist:
 
 2. **Standard Mode:** When only `feature_list.json` exists
    - Implements and verifies features from migration
+
+### QA Engineer Agent - Categories
+
+The `qa-engineer` operates in two primary categories:
+
+1. **Category A: Quality Assurance (Testing)**
+   - **Smoke Test:** Predefined critical path check.
+   - **Targeted Scenario:** Specific user journey simulation.
+   - **Exploratory/Monkey:** Random stress testing.
+
+2. **Category B: Documentation**
+   - **Documentation Maintenance:** Updates README and other docs.
 
 ---
 
